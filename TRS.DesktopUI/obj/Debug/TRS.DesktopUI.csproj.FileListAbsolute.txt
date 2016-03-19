@@ -6,3 +6,4 @@ D:\Yura\Programming\C#\Epam\Projects\TableReservationSystem\TRS\TRS.DesktopUI\ob
 D:\Yura\Programming\C#\Epam\Projects\TableReservationSystem\TRS\TRS.DesktopUI\obj\Debug\TRS.DesktopUI.csproj.GenerateResource.Cache
 D:\Yura\Programming\C#\Epam\Projects\TableReservationSystem\TRS\TRS.DesktopUI\obj\Debug\TRS.DesktopUI.exe
 D:\Yura\Programming\C#\Epam\Projects\TableReservationSystem\TRS\TRS.DesktopUI\obj\Debug\TRS.DesktopUI.pdb
+D:\Yura\Programming\C#\Epam\Projects\TableReservationSystem\TRS\TRS.DesktopUI\obj\Debug\TRS.DesktopUI.MainForm.resources

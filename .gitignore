@@ -1,4 +1,5 @@
 TRS.Database/bin/*
+TRS.Database/TRS.Database.dbmdl
 TRS.DesktopUI/bin/*
 TRS.Entities/bin/*
 TRS.Repositories/bin/*

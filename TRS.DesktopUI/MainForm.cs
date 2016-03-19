@@ -16,5 +16,10 @@ namespace TRS.DesktopUI
         {
             InitializeComponent();
         }
+
+        private void mcDate_DateSelected(object sender, DateRangeEventArgs e)
+        {
+            MessageBox.Show("Bla");
+        }
     }
 }

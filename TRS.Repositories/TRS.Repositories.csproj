@@ -40,12 +40,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Abstract\ICustomerRepository.cs" />
+    <Compile Include="Abstract\IReservationRepository.cs" />
+    <Compile Include="Abstract\ITableRepository.cs" />
+    <Compile Include="Abstract\IUserRepository.cs" />
+    <Compile Include="Concrete\SqlCustomerRepository.cs" />
+    <Compile Include="Concrete\SqlReservationRepository.cs" />
+    <Compile Include="Concrete\SqlTableRepository.cs" />
+    <Compile Include="Concrete\SqlUserRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Abstract\" />
-    <Folder Include="Concrete\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\TRS.Entities\TRS.Entities.csproj">
       <Project>{148d8d80-16ef-44e9-a847-eefe70603a95}</Project>
