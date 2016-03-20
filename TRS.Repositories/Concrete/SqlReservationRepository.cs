@@ -9,12 +9,20 @@ using TRS.Repositories.Abstract;
 
 namespace TRS.Repositories.Concrete
 {
-    class SqlReservationRepository : IReservationRepository
+    public class SqlReservationRepository : IReservationRepository
     {
         #region Queries
 
+        //TODO: Edit query
         private const string GetReservationsByDateQuery = @"SELECT * FROM tblReservation res 
                                                         WHERE (datediff(day, @dateTime, res.DateIn) = 0);";
+
+        private const string GetCountOfResOnDateQuery = @"SELECT COUNT(res.Id) AS CountOfRes FROM tblReservation res 
+                                                        WHERE (DATEDIFF(day, res.dateIn, @reservationDate) = 0);";
+
+        private const string GetTotalGuestsOnDateQuery = @"SELECT SUM(tab.CountOfSeats) AS TotalGuests FROM tblReservation res 
+	                                                        JOIN tblTable tab ON res.TableId = tab.Id
+	                                                            WHERE (DATEDIFF(day, res.dateIn, @reservationDate) = 0);";
 
         #endregion
 
@@ -72,6 +80,52 @@ namespace TRS.Repositories.Concrete
         public IEnumerable<Reservation> SellectAll()
         {
             throw new NotImplementedException();
+        }
+
+        public int GetCountOfReservationOnDate(DateTime reservationDate)
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+                using (SqlCommand command = new SqlCommand())
+                {
+                    command.Connection = connection;
+                    command.CommandText = GetCountOfResOnDateQuery;
+                    command.Parameters.AddWithValue("@reservationDate", reservationDate);
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        int? result = null;
+                        if (reader.Read())
+                        {
+                            result = reader["CountOfRes"] as int?;
+                        }
+                        return result ?? 0;
+                    }
+                }
+            }
+        }
+
+        public int GetTotalGuestsOnDate(DateTime reservationDate)
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+                using (SqlCommand command = new SqlCommand())
+                {
+                    command.Connection = connection;
+                    command.CommandText = GetTotalGuestsOnDateQuery;
+                    command.Parameters.AddWithValue("@reservationDate", reservationDate);
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        int? result = null;
+                        if (reader.Read())
+                        {
+                            result = reader["TotalGuests"] as int?;
+                        }
+                        return result ?? 0;
+                    }
+                }
+            }
         }
 
         #endregion

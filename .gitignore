@@ -3,3 +3,4 @@ TRS.Database/TRS.Database.dbmdl
 TRS.DesktopUI/bin/*
 TRS.Entities/bin/*
 TRS.Repositories/bin/*
+TRS.DesktopUI/Code/Encryptor.cs

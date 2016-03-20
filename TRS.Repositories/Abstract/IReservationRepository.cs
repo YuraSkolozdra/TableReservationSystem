@@ -11,5 +11,7 @@ namespace TRS.Repositories.Abstract
     {
         IEnumerable<Reservation> SellectAll();
         IEnumerable<Reservation> GetReservationsByDate(DateTime reservationDate);
+        int GetCountOfReservationOnDate(DateTime reservationDate);
+        int GetTotalGuestsOnDate(DateTime reservationDate);
     }
 }

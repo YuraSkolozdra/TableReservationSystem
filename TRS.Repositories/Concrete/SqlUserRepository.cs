@@ -14,7 +14,7 @@ namespace TRS.Repositories
     {
         #region Queries
 
-        private const string spGetUserByLoginQuery = "spGetUserByLogin";
+        private const string spGetUserByLoginQuery = "sp_GetUserByLogin";
 
         #endregion
 
@@ -35,7 +35,7 @@ namespace TRS.Repositories
 
         #region IUserRepository
 
-        public User GetUserByLogin(string login, string password)
+        public User GetUserByLogin(string login, string passwordHash)
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
@@ -45,8 +45,8 @@ namespace TRS.Repositories
                     command.Connection = connection;
                     command.CommandType = CommandType.StoredProcedure;
                     command.CommandText = spGetUserByLoginQuery;
-                    command.Parameters.AddWithValue("@Login", login);
-                    command.Parameters.AddWithValue("@Password", password);
+                    command.Parameters.AddWithValue("@login", login);
+                    command.Parameters.AddWithValue("@passwordHash", passwordHash);
                     using (SqlDataReader reader = command.ExecuteReader())
                     {
                         User user = null;
@@ -55,7 +55,7 @@ namespace TRS.Repositories
                             user = new User();
                             user.Id = (int)reader["Id"];
                             user.FirstName = (string)reader["FirstName"];
-                            user.LastName = (string)reader["Surname"];
+                            user.LastName = (string)reader["LastName"];
                             user.Login = (string)reader["Login"];
                             user.Disabled = (bool)reader["Disabled"];
                         }

@@ -1,13 +1,15 @@
-USE TRS;
+USE TRS_DB;
 
 GO
 
 SET IDENTITY_INSERT tblUser ON;
-INSERT INTO tblUser (Id, FirstName, LastName, [Login], [Password], [Disabled])
+INSERT INTO tblUser (Id, FirstName, LastName, [Login], [PasswordHash], [Disabled])
 	VALUES
-		(1, 'George', 'Gann', 'Archon1', 'QWERTY', 0),
-		(2,'Bob','Trix','Bobx','123456',0),
-        (3,'John','Cena','JCena','654321',0);
+		(1, 'Yura', 'Skolozdra', 'yurask', 'e46d54dc7e7b52067bf34306697094b0', 0),
+		(2, 'George', 'Loki','loki', '7369780dde9330cb2204792e0096a655',0),
+        (3, 'Jesse', 'Tate', 'jtate', 'e9077df1a7e9f04298b7f18f1b3690af',0),
+		(4, 'Ray', 'Johns', 'rjohns', 'dd66fe2f88738d2e8c3bb6347c4c6fdb', 0),
+		(5, 'Danny', 'Mur', 'dannymur', '8812d205f0621883321d6a750fa8eef2', 0)
 SET IDENTITY_INSERT tblUser OFF;
 
 GO
@@ -70,7 +72,7 @@ VALUES
 (1, 1, 1, '2016-03-24 16:00:00', '2016-03-24 17:00:00', 1, 240, 1),
 (2, 2, 2, '2016-03-25 15:00:00', '2016-03-25 16:00:00', 1, 240, 1),
 (3, 3, 3, '2016-03-25 15:00:00', '2016-03-25 16:00:00', 1, 240, 1),
-(4, 4, 4, '2016-03-24 16:00:00', '2016-01-24 17:00:00', 1, 220, 1),
+(4, 4, 4, '2016-03-24 16:00:00', '2016-03-24 17:00:00', 1, 220, 1),
 (5, 5, 5, '2016-03-18 19:00:00', '2016-03-18 20:00:00', 1, 220, 1),
 (6, 6, 6, '2016-03-27 19:00:00', '2016-03-27 20:00:00', 1, 220, 1),
 (7, 7, 7, '2016-03-27 19:00:00', '2016-03-27 20:00:00', 1, 200, 1),

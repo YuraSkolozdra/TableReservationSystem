@@ -1,10 +1,10 @@
-USE TRS
+USE TRS_DB
 
 GO
 
 CREATE PROC sp_GetUserByLogin
 	@login VARCHAR(50),
-	@password VARCHAR(50)
+	@passwordHash VARCHAR(50)
 AS
 BEGIN
 	SELECT 
@@ -12,10 +12,10 @@ BEGIN
 		FirstName, 
 		LastName, 
 		[Login], 
-		--[Password], 
+		[PasswordHash], 
 		[Disabled] 
 	FROM tblUser
-	WHERE [Login] = @login and [Password] = @password and [Disabled] <> 1;
+	WHERE [Login] = @login and [PasswordHash] = @passwordHash and [Disabled] <> 1;
 END;
 
 GO
@@ -74,17 +74,17 @@ END;
 
 GO
 
-DECLARE @result INT;
+--DECLARE @result INT;
 
-DECLARE @returnValue INT;
-EXEC @returnValue = sp_ReserveTable 'Yura', 'Skolozdra', '099-777-33-11', '2016-03-25 20:00:00', '2016-03-25 21:00:00', 10, 1, @result out;
-PRINT CAST(@returnValue AS NVARCHAR);
-IF (@returnValue = NULL)
-begin
-	print 'return is null';
-end;
+--DECLARE @returnValue INT;
+--EXEC @returnValue = sp_ReserveTable 'Yura', 'Skolozdra', '099-777-33-11', '2016-03-25 20:00:00', '2016-03-25 21:00:00', 10, 1, @result out;
+--PRINT CAST(@returnValue AS NVARCHAR);
+--IF (@returnValue = NULL)
+--begin
+--	print 'return is null';
+--end;
 
-GO
+--GO
 
 --delete from tblReservation where id = 12;
 

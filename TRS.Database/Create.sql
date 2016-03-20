@@ -1,12 +1,11 @@
-IF NOT EXISTS(select * from sysdatabases where name='TRS')
+IF NOT EXISTS(select * from sysdatabases where name='TRS_DB')
 BEGIN
-	CREATE DATABASE TRS;
+	CREATE DATABASE TRS_DB;
 END;
 
 GO
 
-USE TRS;
-
+USE TRS_DB;
 GO
 
 IF NOT EXISTS(select * from sysobjects where name='tblUser' and type='U')
@@ -17,7 +16,7 @@ CREATE TABLE tblUser
 	FirstName NVARCHAR(50) NOT NULL,
 	LastName NVARCHAR(50) NOT NULL,
 	[Login] VARCHAR(50) NOT NULL,
-	[Password] VARCHAR(50) NOT NULL,
+	[PasswordHash] VARCHAR(50) NOT NULL,
 	[Disabled] BIT NOT NULL,
 	CONSTRAINT PK_tblUser_Id PRIMARY KEY (Id),
 	CONSTRAINT UQ_tblUser_Login UNIQUE ([Login])

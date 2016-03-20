@@ -1,0 +1,7 @@
+D:\Yura\Programming\C#\Epam\Projects\TableReservationSystem\TRS\TRS.Repositories\bin\Debug\TRS.Repositories.dll
+D:\Yura\Programming\C#\Epam\Projects\TableReservationSystem\TRS\TRS.Repositories\bin\Debug\TRS.Repositories.pdb
+D:\Yura\Programming\C#\Epam\Projects\TableReservationSystem\TRS\TRS.Repositories\bin\Debug\TRS.Entities.dll
+D:\Yura\Programming\C#\Epam\Projects\TableReservationSystem\TRS\TRS.Repositories\bin\Debug\TRS.Entities.pdb
+D:\Yura\Programming\C#\Epam\Projects\TableReservationSystem\TRS\TRS.Repositories\obj\Debug\TRS.Repositories.csprojResolveAssemblyReference.cache
+D:\Yura\Programming\C#\Epam\Projects\TableReservationSystem\TRS\TRS.Repositories\obj\Debug\TRS.Repositories.dll
+D:\Yura\Programming\C#\Epam\Projects\TableReservationSystem\TRS\TRS.Repositories\obj\Debug\TRS.Repositories.pdb
