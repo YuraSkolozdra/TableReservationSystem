@@ -26,6 +26,8 @@ namespace TRS.Repositories.Concrete
 
         private const string spReserveTable = "sp_ReserveTable";
 
+        private const string spGetCostOfReservationQuery = "sp_GetCostOfReservation";
+
         #endregion        
 
         #region Constructors
@@ -35,7 +37,6 @@ namespace TRS.Repositories.Concrete
         }
 
         #endregion
-
 
         #region IReservationRepository
 
@@ -141,10 +142,44 @@ namespace TRS.Repositories.Concrete
             }
         }
 
-        public int ReserveTable(string firstName, string lastName, string phone,
-            DateTime dateIn, DateTime dateOut, int tableId, int userId)
+        public decimal GetCostOfReservation(Table table, DateTime dateIn, DateTime dateOut)
         {
-            int reservationId = -1;
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+                using (SqlCommand command = new SqlCommand())
+                {
+                    decimal cost = 0;
+
+                    command.Connection = connection;
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.CommandText = spGetCostOfReservationQuery;
+                    command.Parameters.AddWithValue("@tableId", table.Id);
+                    command.Parameters.AddWithValue("@dateIn", dateIn);
+                    command.Parameters.AddWithValue("@dateOut", dateOut);
+
+                    SqlParameter param = new SqlParameter();
+                    param.ParameterName = "@cost";
+                    param.SqlDbType = SqlDbType.Decimal;
+                    param.Direction = ParameterDirection.Output;
+
+                    command.Parameters.Add(param);
+
+                    command.ExecuteNonQuery();
+
+                    cost = (decimal)command.Parameters["@cost"].Value;
+
+                    return cost;
+                }
+            }
+        }
+
+
+
+
+        public int ReserveTable(Reservation reservation)
+        {
+            int reservationId = 0;
 
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
@@ -154,13 +189,13 @@ namespace TRS.Repositories.Concrete
                     command.Connection = connection;
                     command.CommandType = CommandType.StoredProcedure;
                     command.CommandText = spReserveTable;
-                    command.Parameters.AddWithValue("@firstName", firstName);
-                    command.Parameters.AddWithValue("@lastName", lastName);
-                    command.Parameters.AddWithValue("@phone", phone);
-                    command.Parameters.AddWithValue("@dateIn", dateIn);
-                    command.Parameters.AddWithValue("@dateOut", dateOut);
-                    command.Parameters.AddWithValue("@tableId", tableId);
-                    command.Parameters.AddWithValue("@userId", userId);
+                    command.Parameters.AddWithValue("@firstName", reservation.Customer.FirstName);
+                    command.Parameters.AddWithValue("@lastName", reservation.Customer.LastName);
+                    command.Parameters.AddWithValue("@phone", reservation.Customer.Phone);
+                    command.Parameters.AddWithValue("@dateIn", reservation.DateIn);
+                    command.Parameters.AddWithValue("@dateOut", reservation.DateOut);
+                    command.Parameters.AddWithValue("@tableId", reservation.Table.Id);
+                    command.Parameters.AddWithValue("@userId", reservation.UserId);
 
                     SqlParameter param = new SqlParameter();
                     param.ParameterName = "@reservationId";

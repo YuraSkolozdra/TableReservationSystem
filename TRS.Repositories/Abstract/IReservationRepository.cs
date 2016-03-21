@@ -13,7 +13,7 @@ namespace TRS.Repositories.Abstract
         IEnumerable<Reservation> GetReservationsByDate(DateTime reservationDate);
         int GetCountOfReservationByDate(DateTime reservationDate);
         int GetTotalGuestsOnDate(DateTime reservationDate);
-        int ReserveTable(string firstName, string lastName, string phone,
-            DateTime dateIn, DateTime dateOut, int tableId, int userId);
+        int ReserveTable(Reservation reservation);
+        decimal GetCostOfReservation(Table table, DateTime dateIn, DateTime dateOut);
     }
 }

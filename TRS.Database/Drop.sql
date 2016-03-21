@@ -4,14 +4,21 @@ GO
 
 IF EXISTS (SELECT name FROM sysobjects WHERE name = 'sp_GetUserByLogin' AND type = 'P')
 BEGIN
-DROP PROCEDURE sp_GetUserByLogin 
+DROP PROCEDURE sp_GetUserByLogin; 
 END;
 
 GO
 
 IF EXISTS (SELECT name FROM sysobjects WHERE name = 'sp_GetReservationsByDate' AND type = 'P')
 BEGIN
-DROP PROCEDURE sp_GetReservationsByDate 
+DROP PROCEDURE sp_GetReservationsByDate; 
+END;
+
+GO
+
+IF EXISTS (SELECT name FROM sysobjects WHERE name = 'sp_GetTablesByDateAndSeats' AND type = 'P')
+BEGIN
+DROP PROCEDURE sp_GetTablesByDateAndSeats;
 END;
 
 GO

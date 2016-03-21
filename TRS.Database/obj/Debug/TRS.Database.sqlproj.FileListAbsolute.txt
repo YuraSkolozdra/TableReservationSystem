@@ -1,0 +1,7 @@
+D:\Yura\Programming\C#\Epam\Projects\TableReservationSystem\TRS\TRS.Database\bin\Debug\TRS.Database.dacpac
+D:\Yura\Programming\C#\Epam\Projects\TableReservationSystem\TRS\TRS.Database\obj\Debug\Model.xml
+D:\Yura\Programming\C#\Epam\Projects\TableReservationSystem\TRS\TRS.Database\obj\Debug\refactor.xml
+D:\Yura\Programming\C#\Epam\Projects\TableReservationSystem\TRS\TRS.Database\obj\Debug\postdeploy.sql
+D:\Yura\Programming\C#\Epam\Projects\TableReservationSystem\TRS\TRS.Database\obj\Debug\predeploy.sql
+D:\Yura\Programming\C#\Epam\Projects\TableReservationSystem\TRS\TRS.Database\obj\Debug\TRS.Database.dll
+D:\Yura\Programming\C#\Epam\Projects\TableReservationSystem\TRS\TRS.Database\obj\Debug\TRS.Database.pdb

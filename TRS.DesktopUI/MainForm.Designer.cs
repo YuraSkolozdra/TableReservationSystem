@@ -67,7 +67,7 @@
             this.ColTimeTo,
             this.ColPersonsCount,
             this.ColCost});
-            this.dgvReservations.Location = new System.Drawing.Point(19, 45);
+            this.dgvReservations.Location = new System.Drawing.Point(19, 58);
             this.dgvReservations.Name = "dgvReservations";
             this.dgvReservations.Size = new System.Drawing.Size(947, 282);
             this.dgvReservations.TabIndex = 0;
@@ -79,7 +79,7 @@
             this.mmHelp});
             this.mainMenu.Location = new System.Drawing.Point(0, 0);
             this.mainMenu.Name = "mainMenu";
-            this.mainMenu.Size = new System.Drawing.Size(1024, 24);
+            this.mainMenu.Size = new System.Drawing.Size(1018, 24);
             this.mainMenu.TabIndex = 2;
             this.mainMenu.Text = "mainMenu";
             // 
@@ -121,18 +121,18 @@
             // 
             // btnReserve
             // 
-            this.btnReserve.Location = new System.Drawing.Point(688, 434);
+            this.btnReserve.Location = new System.Drawing.Point(645, 449);
             this.btnReserve.Name = "btnReserve";
             this.btnReserve.Size = new System.Drawing.Size(124, 31);
             this.btnReserve.TabIndex = 5;
-            this.btnReserve.Text = "Reserve";
+            this.btnReserve.Text = "New Reservation";
             this.btnReserve.UseVisualStyleBackColor = true;
             this.btnReserve.Click += new System.EventHandler(this.btnReserve_Click);
             // 
             // lblReservationCount
             // 
             this.lblReservationCount.AutoSize = true;
-            this.lblReservationCount.Location = new System.Drawing.Point(25, 343);
+            this.lblReservationCount.Location = new System.Drawing.Point(25, 354);
             this.lblReservationCount.Name = "lblReservationCount";
             this.lblReservationCount.Size = new System.Drawing.Size(107, 13);
             this.lblReservationCount.TabIndex = 6;
@@ -141,7 +141,7 @@
             // lblTotalGuests
             // 
             this.lblTotalGuests.AutoSize = true;
-            this.lblTotalGuests.Location = new System.Drawing.Point(162, 343);
+            this.lblTotalGuests.Location = new System.Drawing.Point(161, 354);
             this.lblTotalGuests.Name = "lblTotalGuests";
             this.lblTotalGuests.Size = new System.Drawing.Size(64, 13);
             this.lblTotalGuests.TabIndex = 7;
@@ -157,9 +157,9 @@
             this.grvReservationData.Controls.Add(this.lblTotalGuests);
             this.grvReservationData.Controls.Add(this.dgvReservations);
             this.grvReservationData.Controls.Add(this.lblReservationCount);
-            this.grvReservationData.Location = new System.Drawing.Point(12, 39);
+            this.grvReservationData.Location = new System.Drawing.Point(12, 27);
             this.grvReservationData.Name = "grvReservationData";
-            this.grvReservationData.Size = new System.Drawing.Size(992, 389);
+            this.grvReservationData.Size = new System.Drawing.Size(986, 403);
             this.grvReservationData.TabIndex = 8;
             this.grvReservationData.TabStop = false;
             // 
@@ -222,7 +222,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1024, 603);
+            this.ClientSize = new System.Drawing.Size(1018, 492);
             this.Controls.Add(this.grvReservationData);
             this.Controls.Add(this.btnReserve);
             this.Controls.Add(this.mainMenu);

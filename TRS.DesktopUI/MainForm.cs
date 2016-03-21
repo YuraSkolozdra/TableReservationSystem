@@ -48,8 +48,7 @@ namespace TRS.DesktopUI
 
 
         #region Update methods
-
-        //maube send datatime
+        
         private void UpdateReservations()
         {
             var reservationDate = dtpDate.Value;

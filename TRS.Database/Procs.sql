@@ -51,6 +51,32 @@ END;
 
 GO
 
+
+CREATE PROC sp_GetTablesByDateAndSeats
+	@dateIn DATETIME,
+	@dateOut DATETIME,
+	@countOfSeats INT
+AS
+BEGIN
+	SELECT
+		tab.Id,
+		tab.Rate,
+		tab.CountOfSeats,
+		loc.Id AS LocationId,
+		loc.Name AS LocationName
+	FROM tblTable tab
+	JOIN tblLocation loc
+	ON tab.LocationId = loc.Id
+	LEFT OUTER JOIN tblReservation res
+	ON res.TableId = tab.Id
+	WHERE (((res.[Status] <> 1) OR ((@dateIn < res.DateIn AND @dateOut < res.DateIn) OR
+			(@dateIn > res.DateOut AND @dateOut > res.DateOut))) OR (res.Id IS NULL)) AND 
+				(@countOfSeats <= tab.CountOfSeats)
+	ORDER BY tab.CountOfSeats, tab.Rate;
+END;
+
+GO
+
 CREATE PROCEDURE sp_ReserveTable
 	@firstName NVARCHAR(50),
 	@lastName NVARCHAR(50),
@@ -105,24 +131,30 @@ END;
 
 GO
 
---DECLARE @result INT;
+CREATE PROCEDURE sp_GetCostOfReservation
+					@tableId INT,
+					@dateIn DATETIME,
+					@dateOut DATETIME,
+					@cost NUMERIC(18, 4) OUT
+AS
+BEGIN
+	DECLARE @rate NUMERIC(18, 4);
+	DECLARE @minutes INT;
 
---DECLARE @returnValue INT;
---EXEC @returnValue = sp_ReserveTable 'Yura', 'Skolozdra', '099-777-33-11', '2016-03-25 20:00:00', '2016-03-25 21:00:00', 10, 1, @result out;
---PRINT CAST(@returnValue AS NVARCHAR);
---IF (@returnValue = NULL)
---begin
---	print 'return is null';
---end;
+	SELECT @rate = tab.Rate FROM tblTable tab WHERE tab.Id = @tableId;
+	SELECT @minutes = DATEDIFF(minute, @dateIn, @dateOut);
+	SET @cost = (@rate / 30) * @minutes;
+		
+END;
 
---GO
-
---delete from tblReservation where id = 12;
-
-
-DECLARE @reservationTime DATETIME;
-SET @reservationTime = '2016-03-25 15:00:00.000';
-
-EXEC sp_GetReservationsByDate @reservationTime;
 GO
 
+DECLARE @dateIn DATETIME;
+SET @dateIn = CAST('2016-03-24 16:00:00.000' AS DATETIME);
+
+DECLARE @dateOut DATETIME;
+SET @dateIn = CAST('2016-03-24 17:00:00.000' AS DATETIME);
+
+DECLARE @cost numeric(18, 4);
+EXEC sp_GetCostOfReservation 1, @dateIn, @dateOut, @cost;
+PRINT 'There are ' + CAST(@cost AS VARCHAR)
