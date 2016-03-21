@@ -12,3 +12,4 @@ D:\Yura\Programming\C#\Epam\Projects\TableReservationSystem\TRS\TRS.DesktopUI\bi
 D:\Yura\Programming\C#\Epam\Projects\TableReservationSystem\TRS\TRS.DesktopUI\bin\Debug\TRS.Entities.pdb
 D:\Yura\Programming\C#\Epam\Projects\TableReservationSystem\TRS\TRS.DesktopUI\bin\Debug\TRS.Repositories.pdb
 D:\Yura\Programming\C#\Epam\Projects\TableReservationSystem\TRS\TRS.DesktopUI\obj\Debug\TRS.DesktopUI.Forms.LoginForm.resources
+D:\Yura\Programming\C#\Epam\Projects\TableReservationSystem\TRS\TRS.DesktopUI\obj\Debug\TRS.DesktopUI.Forms.ReserveForm.resources

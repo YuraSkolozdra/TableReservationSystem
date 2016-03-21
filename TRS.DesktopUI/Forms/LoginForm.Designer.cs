@@ -29,10 +29,10 @@
         private void InitializeComponent()
         {
             this.grbLogin = new System.Windows.Forms.GroupBox();
-            this.lblLogin = new System.Windows.Forms.Label();
-            this.lblPassword = new System.Windows.Forms.Label();
-            this.tbLogin = new System.Windows.Forms.TextBox();
             this.tbPassword = new System.Windows.Forms.TextBox();
+            this.tbLogin = new System.Windows.Forms.TextBox();
+            this.lblPassword = new System.Windows.Forms.Label();
+            this.lblLogin = new System.Windows.Forms.Label();
             this.btnLogin = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
             this.grbLogin.SuspendLayout();
@@ -53,14 +53,20 @@
             this.grbLogin.TabIndex = 0;
             this.grbLogin.TabStop = false;
             // 
-            // lblLogin
+            // tbPassword
             // 
-            this.lblLogin.AutoSize = true;
-            this.lblLogin.Location = new System.Drawing.Point(19, 28);
-            this.lblLogin.Name = "lblLogin";
-            this.lblLogin.Size = new System.Drawing.Size(33, 13);
-            this.lblLogin.TabIndex = 0;
-            this.lblLogin.Text = "Login";
+            this.tbPassword.Location = new System.Drawing.Point(97, 58);
+            this.tbPassword.Name = "tbPassword";
+            this.tbPassword.PasswordChar = '*';
+            this.tbPassword.Size = new System.Drawing.Size(160, 20);
+            this.tbPassword.TabIndex = 3;
+            // 
+            // tbLogin
+            // 
+            this.tbLogin.Location = new System.Drawing.Point(97, 28);
+            this.tbLogin.Name = "tbLogin";
+            this.tbLogin.Size = new System.Drawing.Size(160, 20);
+            this.tbLogin.TabIndex = 2;
             // 
             // lblPassword
             // 
@@ -71,19 +77,14 @@
             this.lblPassword.TabIndex = 1;
             this.lblPassword.Text = "Password";
             // 
-            // tbLogin
+            // lblLogin
             // 
-            this.tbLogin.Location = new System.Drawing.Point(97, 28);
-            this.tbLogin.Name = "tbLogin";
-            this.tbLogin.Size = new System.Drawing.Size(160, 20);
-            this.tbLogin.TabIndex = 2;
-            // 
-            // tbPassword
-            // 
-            this.tbPassword.Location = new System.Drawing.Point(97, 58);
-            this.tbPassword.Name = "tbPassword";
-            this.tbPassword.Size = new System.Drawing.Size(160, 20);
-            this.tbPassword.TabIndex = 3;
+            this.lblLogin.AutoSize = true;
+            this.lblLogin.Location = new System.Drawing.Point(19, 28);
+            this.lblLogin.Name = "lblLogin";
+            this.lblLogin.Size = new System.Drawing.Size(33, 13);
+            this.lblLogin.TabIndex = 0;
+            this.lblLogin.Text = "Login";
             // 
             // btnLogin
             // 
@@ -97,6 +98,7 @@
             // 
             // btnCancel
             // 
+            this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.btnCancel.Location = new System.Drawing.Point(159, 117);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);

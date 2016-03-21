@@ -44,6 +44,7 @@
     <Compile Include="Abstract\IReservationRepository.cs" />
     <Compile Include="Abstract\ITableRepository.cs" />
     <Compile Include="Abstract\IUserRepository.cs" />
+    <Compile Include="Abstract\SqlBaseRepository.cs" />
     <Compile Include="Concrete\SqlCustomerRepository.cs" />
     <Compile Include="Concrete\SqlReservationRepository.cs" />
     <Compile Include="Concrete\SqlTableRepository.cs" />

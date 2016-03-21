@@ -30,8 +30,9 @@ namespace TRS.DesktopUI.Forms
         {
             string login = tbLogin.Text;
             string password = tbPassword.Text;
-            string passwordHash = Encryptor.MD5Hash(password);
+            string passwordHash = AuthentificationManager.GetPasswordHash(password);
             User user = _userRepository.GetUserByLogin(login, passwordHash);
+
             if (user == null)
             {
                 MessageBox.Show(this, "Invalid user name or password", "Authentication Error", MessageBoxButtons.OK, MessageBoxIcon.Error);

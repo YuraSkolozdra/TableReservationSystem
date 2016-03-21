@@ -11,11 +11,10 @@ namespace TRS.Entities
         public int Id { get; set; }
         public Table Table { get; set; }
         public Customer Customer { get; set; }
-        public int CustomerId { get; set; }
         public DateTime DateIn { get; set; }
         public DateTime DateOut { get; set; }
         public int Status { get; set; }
         public decimal Cost { get; set; }
-        public User user { get; set; }
+        public int UserId { get; set; }
     }
 }

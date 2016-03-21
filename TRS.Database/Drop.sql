@@ -9,6 +9,13 @@ END;
 
 GO
 
+IF EXISTS (SELECT name FROM sysobjects WHERE name = 'sp_GetReservationsByDate' AND type = 'P')
+BEGIN
+DROP PROCEDURE sp_GetReservationsByDate 
+END;
+
+GO
+
 IF EXISTS (SELECT name FROM sysobjects WHERE name = 'sp_ReserveTable' AND type = 'P')
 BEGIN
 DROP PROCEDURE sp_ReserveTable 

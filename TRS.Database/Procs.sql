@@ -11,11 +11,42 @@ BEGIN
 		Id, 
 		FirstName, 
 		LastName, 
-		[Login], 
-		[PasswordHash], 
+		[Login],		 
 		[Disabled] 
 	FROM tblUser
-	WHERE [Login] = @login and [PasswordHash] = @passwordHash and [Disabled] <> 1;
+	WHERE [Login] = @login AND [PasswordHash] = @passwordHash AND [Disabled] <> 1;
+END;
+
+GO
+
+CREATE PROC sp_GetReservationsByDate
+	@reservationDate DATETIME
+AS
+BEGIN
+	SELECT
+		res.Id,
+		tab.Id as TableId,
+		tab.Rate,
+		tab.CountOfSeats,
+		loc.Id as LocationId,
+		loc.Name as LocationName,
+		cust.Id as CustomerId,
+		cust.FirstName as FirstName,
+		cust.LastName as LastName,
+		cust.Phone as Phone,
+		res.DateIn,
+		res.DateOut,
+		res.[Status],
+		res.Cost,
+		res.UserId
+	FROM tblReservation res
+	JOIN tblTable tab
+	ON res.Id = tab.Id
+	JOIN tblCustomer cust
+	ON res.CustomerId = cust.Id
+	JOIN tblLocation loc
+	ON tab.LocationId = loc.Id
+	WHERE (DATEDIFF(day, res.dateIn, @reservationDate) = 0) AND res.[Status] = 1;		
 END;
 
 GO
@@ -87,4 +118,11 @@ GO
 --GO
 
 --delete from tblReservation where id = 12;
+
+
+DECLARE @reservationTime DATETIME;
+SET @reservationTime = '2016-03-25 15:00:00.000';
+
+EXEC sp_GetReservationsByDate @reservationTime;
+GO
 

@@ -47,8 +47,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Code\AuthentificationManager.cs" />
     <Compile Include="Code\CurrentUser.cs" />
-    <Compile Include="Code\Encryptor.cs" />
     <Compile Include="Forms\LoginForm.cs">
       <SubType>Form</SubType>
     </Compile>

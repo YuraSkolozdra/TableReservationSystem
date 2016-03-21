@@ -16,5 +16,6 @@ namespace TRS.Entities
         public DateTime DateIn { get; set; }
         public DateTime DateOut { get; set; }
         public decimal Cost { get; set; }
+        public int CountOfSeats { get; set; }
     }
 }

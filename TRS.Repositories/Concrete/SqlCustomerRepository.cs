@@ -5,29 +5,22 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TRS.Entities;
-using TRS.Repository.Abstract;
+using TRS.Repositories.Abstract;
 
-namespace TRS.Repository.Concrete
+namespace TRS.Repositories.Concrete
 {
-    public class SqlCustomerRepository : ICustomerRepository
+    public class SqlCustomerRepository : SqlBaseRepository, ICustomerRepository
     {
         #region Queries
 
         private const string GetAllCustomersQuery = "SELECT Id, FirstName, LastName, Phone FROM tblCustomer;";
 
-        #endregion
-
-        #region Private fields
-
-        private readonly string _connectionString;
-
-        #endregion
+        #endregion        
 
         #region Constructors
 
-        public SqlCustomerRepository(string connectionString)
+        public SqlCustomerRepository(string connectionString) : base(connectionString)
         {
-            _connectionString = connectionString;
         }
 
         #endregion

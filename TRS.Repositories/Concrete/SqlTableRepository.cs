@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using TRS.Entities;
-using TRS.Repository.Abstract;
+using TRS.Repositories.Abstract;
 
-namespace TRS.Repository.Concrete
+namespace TRS.Repositories.Concrete
 {
-    public class SqlTableRepository : ITableRepository
+    public class SqlTableRepository : SqlBaseRepository, ITableRepository
     {
         #region Queries
 
@@ -16,17 +16,10 @@ namespace TRS.Repository.Concrete
 
         #endregion
 
-        #region Private fields
-
-        private readonly string _connectionString;
-
-        #endregion
-
         #region Constructors
 
-        public SqlTableRepository(string connectionString)
+        public SqlTableRepository(string connectionString) : base(connectionString)
         {
-            _connectionString = connectionString;
         }
 
         #endregion

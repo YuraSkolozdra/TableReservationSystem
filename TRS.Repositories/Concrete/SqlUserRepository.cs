@@ -10,7 +10,7 @@ using TRS.Repositories.Abstract;
 
 namespace TRS.Repositories
 {
-    public class SqlUserRepository : IUserRepository
+    public class SqlUserRepository : SqlBaseRepository, IUserRepository
     {
         #region Queries
 
@@ -18,17 +18,10 @@ namespace TRS.Repositories
 
         #endregion
 
-        #region Private Fields
-
-        private readonly string _connectionString;
-
-        #endregion
-
         #region Constructors
 
-        public SqlUserRepository(string connectionString)
+        public SqlUserRepository(string connectionString) : base(connectionString)
         {
-            _connectionString = connectionString;
         }
 
         #endregion
