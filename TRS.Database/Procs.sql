@@ -59,7 +59,7 @@ CREATE PROC sp_GetTablesByDateAndSeats
 AS
 BEGIN
 	SELECT
-		tab.Id,
+		DISTINCT tab.Id,
 		tab.Rate,
 		tab.CountOfSeats,
 		loc.Id AS LocationId,
@@ -68,7 +68,7 @@ BEGIN
 	JOIN tblLocation loc
 	ON tab.LocationId = loc.Id
 	LEFT OUTER JOIN tblReservation res
-	ON res.TableId = tab.Id
+	ON tab.Id = res.TableId
 	WHERE (((res.[Status] <> 1) OR (@dateIn > res.DateOut OR @dateOut < res.DateIn)) 
 				OR res.Id IS NULL) AND (@countOfSeats <= tab.CountOfSeats)
 	--ORDER BY tab.CountOfSeats, tab.Rate;
@@ -76,13 +76,13 @@ END;
 
 GO
 
---DECLARE @dateIn DATETIME;
---SET @dateIn = CAST('2016-03-26 20:00:00.000' AS DATETIME);
+DECLARE @dateIn DATETIME;
+SET @dateIn = CAST('2016-03-27 19:00:00.000' AS DATETIME);
 
---DECLARE @dateOut DATETIME;
---SET @dateIn = CAST('2016-03-26 21:00:00.000' AS DATETIME);
+DECLARE @dateOut DATETIME;
+SET @dateIn = CAST('2016-03-27 20:00:00.000' AS DATETIME);
 
---EXEC sp_GetTablesByDateAndSeats @dateIn, @dateOut, 1;
+EXEC sp_GetTablesByDateAndSeats @dateIn, @dateOut, 1;
 
 CREATE PROCEDURE sp_ReserveTable
 	@firstName NVARCHAR(50),
