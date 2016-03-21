@@ -69,13 +69,20 @@ BEGIN
 	ON tab.LocationId = loc.Id
 	LEFT OUTER JOIN tblReservation res
 	ON res.TableId = tab.Id
-	WHERE (((res.[Status] <> 1) OR ((@dateIn < res.DateIn AND @dateOut < res.DateIn) OR
-			(@dateIn > res.DateOut AND @dateOut > res.DateOut))) OR (res.Id IS NULL)) AND 
-				(@countOfSeats <= tab.CountOfSeats)
-	ORDER BY tab.CountOfSeats, tab.Rate;
+	WHERE (((res.[Status] <> 1) OR (@dateIn > res.DateOut OR @dateOut < res.DateIn)) 
+				OR res.Id IS NULL) AND (@countOfSeats <= tab.CountOfSeats)
+	--ORDER BY tab.CountOfSeats, tab.Rate;
 END;
 
 GO
+
+--DECLARE @dateIn DATETIME;
+--SET @dateIn = CAST('2016-03-26 20:00:00.000' AS DATETIME);
+
+--DECLARE @dateOut DATETIME;
+--SET @dateIn = CAST('2016-03-26 21:00:00.000' AS DATETIME);
+
+--EXEC sp_GetTablesByDateAndSeats @dateIn, @dateOut, 1;
 
 CREATE PROCEDURE sp_ReserveTable
 	@firstName NVARCHAR(50),
@@ -143,18 +150,7 @@ BEGIN
 
 	SELECT @rate = tab.Rate FROM tblTable tab WHERE tab.Id = @tableId;
 	SELECT @minutes = DATEDIFF(minute, @dateIn, @dateOut);
-	SET @cost = (@rate / 30) * @minutes;
-		
+	SET @cost = (@rate / 30) * @minutes;		
 END;
 
 GO
-
-DECLARE @dateIn DATETIME;
-SET @dateIn = CAST('2016-03-24 16:00:00.000' AS DATETIME);
-
-DECLARE @dateOut DATETIME;
-SET @dateIn = CAST('2016-03-24 17:00:00.000' AS DATETIME);
-
-DECLARE @cost numeric(18, 4);
-EXEC sp_GetCostOfReservation 1, @dateIn, @dateOut, @cost;
-PRINT 'There are ' + CAST(@cost AS VARCHAR)

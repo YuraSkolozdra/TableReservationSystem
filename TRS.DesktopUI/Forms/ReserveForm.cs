@@ -150,6 +150,8 @@ namespace TRS.DesktopUI.Forms
             var dateOut = dtpDate.Value.Date.Add(ParseCbToTime(cbTimeTo));
             var countOfPeople = Int32.Parse(cbCountOfPeople.Text);
 
+            MessageBox.Show(dateIn.ToString() + dateOut.ToString());
+
             var tables = (List<Table>)_tableRepository.GetAvailableTables(dateIn, dateOut, countOfPeople);
 
             dgvTables.Rows.Clear();
@@ -208,9 +210,9 @@ namespace TRS.DesktopUI.Forms
 
         private bool IsTimesValid()
         {
-            var startTime = ParseCbToTime(cbTimeFrom);
-            var endTime = ParseCbToTime(cbTimeTo);
-            return startTime < endTime;
+            var startTime = dtpDate.Value.Date.Add(ParseCbToTime(cbTimeFrom));
+            var endTime = dtpDate.Value.Date.Add(ParseCbToTime(cbTimeTo));
+            return DateTime.Compare(startTime, endTime) < 0;
         }
 
         #endregion

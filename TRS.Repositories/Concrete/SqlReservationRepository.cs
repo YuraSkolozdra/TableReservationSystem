@@ -174,9 +174,6 @@ namespace TRS.Repositories.Concrete
             }
         }
 
-
-
-
         public int ReserveTable(Reservation reservation)
         {
             int reservationId = 0;
