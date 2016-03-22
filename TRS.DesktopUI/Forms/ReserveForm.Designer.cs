@@ -80,7 +80,7 @@
             this.grbReserveData.Controls.Add(this.gbCustomerData);
             this.grbReserveData.Location = new System.Drawing.Point(16, 15);
             this.grbReserveData.Name = "grbReserveData";
-            this.grbReserveData.Size = new System.Drawing.Size(1006, 622);
+            this.grbReserveData.Size = new System.Drawing.Size(960, 622);
             this.grbReserveData.TabIndex = 0;
             this.grbReserveData.TabStop = false;
             // 
@@ -118,7 +118,7 @@
             this.btnReserve.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.btnReserve.Image = global::TRS.DesktopUI.Properties.Resources.symbol_check_icon;
             this.btnReserve.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnReserve.Location = new System.Drawing.Point(492, 557);
+            this.btnReserve.Location = new System.Drawing.Point(472, 558);
             this.btnReserve.Name = "btnReserve";
             this.btnReserve.Size = new System.Drawing.Size(186, 39);
             this.btnReserve.TabIndex = 1;
@@ -142,9 +142,9 @@
             // gtbTables
             // 
             this.gtbTables.Controls.Add(this.dgvTables);
-            this.gtbTables.Location = new System.Drawing.Point(406, 23);
+            this.gtbTables.Location = new System.Drawing.Point(388, 23);
             this.gtbTables.Name = "gtbTables";
-            this.gtbTables.Size = new System.Drawing.Size(576, 447);
+            this.gtbTables.Size = new System.Drawing.Size(548, 447);
             this.gtbTables.TabIndex = 12;
             this.gtbTables.TabStop = false;
             this.gtbTables.Text = "Available tables";
@@ -159,9 +159,9 @@
             this.ColRate,
             this.ColCountOfSeats,
             this.ColLocation});
-            this.dgvTables.Location = new System.Drawing.Point(24, 37);
+            this.dgvTables.Location = new System.Drawing.Point(22, 23);
             this.dgvTables.Name = "dgvTables";
-            this.dgvTables.Size = new System.Drawing.Size(516, 385);
+            this.dgvTables.Size = new System.Drawing.Size(506, 385);
             this.dgvTables.TabIndex = 0;
             this.dgvTables.SelectionChanged += new System.EventHandler(this.dgvTables_SelectionChanged);
             // 
@@ -362,12 +362,13 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.LightBlue;
-            this.ClientSize = new System.Drawing.Size(1044, 651);
+            this.ClientSize = new System.Drawing.Size(988, 651);
             this.Controls.Add(this.grbReserveData);
             this.Font = new System.Drawing.Font("Georgia", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "ReserveForm";
             this.Text = "Make a reservation";
+            this.Load += new System.EventHandler(this.ReserveForm_Load);
             this.grbReserveData.ResumeLayout(false);
             this.grbSummary.ResumeLayout(false);
             this.grbSummary.PerformLayout();

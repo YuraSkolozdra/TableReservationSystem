@@ -21,7 +21,7 @@ namespace TRS.DesktopUI.Forms
 
         public LoginForm()
         {
-            _userRepository = new SqlUserRepository(ConfigurationManager.ConnectionStrings["TRS_DBConnectionString"].ConnectionString);
+            _userRepository = new SqlUserRepository(ConfigurationManager.ConnectionStrings["TRS_DB"].ConnectionString);
 
             InitializeComponent();
         }

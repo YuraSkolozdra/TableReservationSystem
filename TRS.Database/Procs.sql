@@ -1,4 +1,4 @@
-USE TRS_DB
+USE TRS
 
 GO
 

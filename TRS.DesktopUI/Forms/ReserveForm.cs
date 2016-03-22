@@ -1,14 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Configuration;
-using System.Data;
-using System.Drawing;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using TRS.DesktopUI.Code;
 using TRS.Repositories.Abstract;
 using TRS.Repositories.Concrete;
 using TRS.Entities;
@@ -36,18 +30,120 @@ namespace TRS.DesktopUI.Forms
 
         public ReserveForm()
         {
-            var connectionString = ConfigurationManager.ConnectionStrings["TRS_DBConnectionString"].ConnectionString;
+            var connectionString = ConfigurationManager.ConnectionStrings["TRS_DB"].ConnectionString;
             _reservationRepository = new SqlReservationRepository(connectionString);
             _tableRepository = new SqlTableRepository(connectionString);
 
             InitializeComponent();
+        }
 
+        #endregion
+
+        #region Methods of form's components
+
+        private void ReserveForm_Load(object sender, EventArgs e)
+        {
             var dateNow = DateTime.Now;
             dtpDate.MinDate = dateNow;
 
             InitializeTimeInputs(dtpDate.Value.Date);
             InitializeDataTables();
             InitializeCountOfSeats();
+        }
+
+        private void btnCheckAvailability_Click(object sender, EventArgs e)
+        {
+            ShowAvailableTables();
+            dgvTables_SelectionChanged(sender, e);
+        }
+
+        private void btnReserve_Click(object sender, EventArgs e)
+        {
+            if (!IsFieldsValid())
+            {
+                return;
+            }
+
+            var dateIn = dtpDate.Value.Date.Add(ParseCbToTime(cbTimeFrom));
+            var dateOut = dtpDate.Value.Date.Add(ParseCbToTime(cbTimeTo));
+
+            var table = _tableRepository.GetTableById((int)dgvTables[0, dgvTables.SelectedRows[0].Index].Value);
+
+            var customer = new Customer() { FirstName = tbFirstName.Text, LastName = tbLastName.Text, Phone = tbPhone.Text };
+
+            var reservation = new Reservation
+            {
+                Table = table,
+                Customer = customer,
+                DateIn = dateIn,
+                DateOut = dateOut,
+                UserId = 1//CurrentUser.Id
+            };
+
+            var confirmResult = MessageBox.Show("Are you sure to reserve this table ??",
+                                     "Confirm reservation!!",
+                                     MessageBoxButtons.YesNo);
+
+            if (confirmResult == DialogResult.Yes)
+            {
+                reservation.Id = _reservationRepository.ReserveTable(reservation);
+                var message = string.Format("Reservation was made, reservation id: {0}", reservation.Id.ToString());
+                MessageBox.Show(message, "Reservation succeeded", MessageBoxButtons.OK);
+                dgvTables.Rows.Clear();
+            }
+        }
+
+        private void btnCancel_Click(object sender, EventArgs e)
+        {
+            var confirmResult = MessageBox.Show("Are you sure to cancel reservation ??",
+                                     "Cancel reservation!!",
+                                     MessageBoxButtons.YesNo);
+            if (confirmResult == DialogResult.Yes)
+            {
+                this.DialogResult = DialogResult.OK;
+                this.Close();
+            }
+        }
+
+        private void dtpDate_ValueChanged(object sender, EventArgs e)
+        {
+            InitializeTimeInputs(dtpDate.Value.Date);
+            dgvTables.Rows.Clear();
+        }
+
+        private void dgvTables_SelectionChanged(object sender, EventArgs e)
+        {
+            if (dgvTables.SelectedRows.Count < 1 || dgvTables.SelectedRows[0].Cells[0].Value == null)
+            {
+                lblSelectedTable.Text = "Selected table";
+                lblCost.Text = "Cost";
+                return;
+            }
+
+            var table = _tableRepository.GetTableById((int)dgvTables[0, dgvTables.SelectedRows[0].Index].Value);
+
+            var dateIn = dtpDate.Value.Date.Add(ParseCbToTime(cbTimeFrom));
+            var dateOut = dtpDate.Value.Date.Add(ParseCbToTime(cbTimeTo));
+
+            decimal cost = _reservationRepository.GetCostOfReservation(table, dateIn, dateOut);
+
+            lblSelectedTable.Text = string.Format("Selected table\t {0}", table.Id);
+            lblCost.Text = string.Format("Cost\t {0:C}", cost);
+        }
+
+        private void cbTimeFrom_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            dgvTables.Rows.Clear();
+        }
+
+        private void cbTimeTo_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            dgvTables.Rows.Clear();
+        }
+
+        private void cbCountOfPeople_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            dgvTables.Rows.Clear();
         }
 
         #endregion
@@ -187,104 +283,8 @@ namespace TRS.DesktopUI.Forms
             return new TimeSpan(hours, minutes, 0);
         }
 
-        #endregion        
-
-        #region Methods of form's components
-
-        private void btnCheckAvailability_Click(object sender, EventArgs e)
-        {
-            ShowAvailableTables();
-            dgvTables_SelectionChanged(sender, e);
-        }
-
-        private void btnReserve_Click(object sender, EventArgs e)
-        {
-            if (!IsFieldsValid())
-            {
-                return;
-            }
-
-            var dateIn = dtpDate.Value.Date.Add(ParseCbToTime(cbTimeFrom));
-            var dateOut = dtpDate.Value.Date.Add(ParseCbToTime(cbTimeTo));
-
-            var table = _tableRepository.GetTableById((int)dgvTables[0, dgvTables.SelectedRows[0].Index].Value);
-
-            var customer = new Customer() { FirstName = tbFirstName.Text, LastName = tbLastName.Text, Phone = tbPhone.Text };
-
-            var reservation = new Reservation
-            {
-                Table = table,
-                Customer = customer,
-                DateIn = dateIn,
-                DateOut = dateOut,
-                UserId = 1//CurrentUser.Id
-            };
-
-            var confirmResult = MessageBox.Show("Are you sure to reserve this table ??",
-                                     "Confirm reservation!!",
-                                     MessageBoxButtons.YesNo);
-
-            if (confirmResult == DialogResult.Yes)
-            {
-                reservation.Id = _reservationRepository.ReserveTable(reservation);
-                MessageBox.Show(string.Format("Reservation was made, reservation id: {0}", reservation.Id.ToString()));
-                dgvTables.Rows.Clear();
-            }
-        }
-
-        private void btnCancel_Click(object sender, EventArgs e)
-        {
-            var confirmResult = MessageBox.Show("Are you sure to cancel reservation ??",
-                                     "Cancel reservation!!",
-                                     MessageBoxButtons.YesNo);
-            if (confirmResult == DialogResult.Yes)
-            {
-                this.DialogResult = DialogResult.OK;
-                this.Close();
-            }
-        }
-
-        private void dtpDate_ValueChanged(object sender, EventArgs e)
-        {
-            InitializeTimeInputs(dtpDate.Value.Date);
-            dgvTables.Rows.Clear();
-        }
-
-        private void dgvTables_SelectionChanged(object sender, EventArgs e)
-        {
-            if (dgvTables.SelectedRows.Count < 1 || dgvTables.SelectedRows[0].Cells[0].Value == null)
-            {
-                lblSelectedTable.Text = "Selected table";
-                lblCost.Text = "Cost";
-                return;
-            }
-
-            var table = _tableRepository.GetTableById((int)dgvTables[0, dgvTables.SelectedRows[0].Index].Value);
-
-            var dateIn = dtpDate.Value.Date.Add(ParseCbToTime(cbTimeFrom));
-            var dateOut = dtpDate.Value.Date.Add(ParseCbToTime(cbTimeTo));
-
-            decimal cost = _reservationRepository.GetCostOfReservation(table, dateIn, dateOut);
-
-            lblSelectedTable.Text = string.Format("Selected table\t {0}", table.Id);
-            lblCost.Text = string.Format("Cost\t {0:C}", cost);
-        }
-
-        private void cbTimeFrom_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            dgvTables.Rows.Clear();
-        }
-
-        private void cbTimeTo_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            dgvTables.Rows.Clear();
-        }
-
-        private void cbCountOfPeople_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            dgvTables.Rows.Clear();
-        }
-
         #endregion
+
+
     }
 }

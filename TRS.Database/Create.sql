@@ -1,11 +1,11 @@
 IF NOT EXISTS(select * from sysdatabases where name='TRS_DB')
 BEGIN
-	CREATE DATABASE TRS_DB;
+	CREATE DATABASE TRS;
 END;
 
 GO
 
-USE TRS_DB;
+USE TRS;
 GO
 
 IF NOT EXISTS(select * from sysobjects where name='tblUser' and type='U')
