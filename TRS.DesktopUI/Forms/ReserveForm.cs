@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using TRS.Repositories.Abstract;
 using TRS.Repositories.Concrete;
 using TRS.Entities;
+using TRS.DesktopUI.Code;
 
 namespace TRS.DesktopUI.Forms
 {
@@ -77,7 +78,7 @@ namespace TRS.DesktopUI.Forms
                 Customer = customer,
                 DateIn = dateIn,
                 DateOut = dateOut,
-                UserId = 1//CurrentUser.Id
+                UserId = CurrentUser.Id
             };
 
             var confirmResult = MessageBox.Show("Are you sure to reserve this table ??",
@@ -95,8 +96,8 @@ namespace TRS.DesktopUI.Forms
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
-            var confirmResult = MessageBox.Show("Are you sure to cancel reservation ??",
-                                     "Cancel reservation!!",
+            var confirmResult = MessageBox.Show("Are you sure to close reservation ?",
+                                     "Close reservation!!",
                                      MessageBoxButtons.YesNo);
             if (confirmResult == DialogResult.Yes)
             {

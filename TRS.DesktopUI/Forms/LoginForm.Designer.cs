@@ -50,7 +50,7 @@
             this.grbLogin.Controls.Add(this.lblLogin);
             this.grbLogin.Location = new System.Drawing.Point(16, 14);
             this.grbLogin.Name = "grbLogin";
-            this.grbLogin.Size = new System.Drawing.Size(402, 140);
+            this.grbLogin.Size = new System.Drawing.Size(402, 129);
             this.grbLogin.TabIndex = 0;
             this.grbLogin.TabStop = false;
             // 
@@ -92,7 +92,7 @@
             this.btnLogin.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.btnLogin.Image = global::TRS.DesktopUI.Properties.Resources.symbol_check_icon;
             this.btnLogin.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnLogin.Location = new System.Drawing.Point(55, 160);
+            this.btnLogin.Location = new System.Drawing.Point(57, 161);
             this.btnLogin.Name = "btnLogin";
             this.btnLogin.Size = new System.Drawing.Size(155, 35);
             this.btnLogin.TabIndex = 1;
@@ -106,7 +106,7 @@
             this.btnCancel.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.btnCancel.Image = global::TRS.DesktopUI.Properties.Resources.symbol_delete_icon;
             this.btnCancel.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnCancel.Location = new System.Drawing.Point(233, 160);
+            this.btnCancel.Location = new System.Drawing.Point(232, 161);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(150, 35);
             this.btnCancel.TabIndex = 2;
@@ -120,7 +120,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.LightBlue;
             this.CancelButton = this.btnCancel;
-            this.ClientSize = new System.Drawing.Size(445, 209);
+            this.ClientSize = new System.Drawing.Size(445, 218);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnLogin);
             this.Controls.Add(this.grbLogin);

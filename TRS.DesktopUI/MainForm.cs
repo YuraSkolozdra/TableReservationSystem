@@ -18,6 +18,7 @@ namespace TRS.DesktopUI
 {
     public partial class MainForm : Form
     {
+
         #region Private Fields
 
         private readonly IReservationRepository _reservationRepository;
@@ -45,33 +46,7 @@ namespace TRS.DesktopUI
 
             InitializeDataReservations();
 
-            //tssLogin.Text = String.Format("Login as {0}", CurrentUser.Login);            
-        }
-
-        #endregion
-
-        #region Component's methods
-
-        private void btnReserve_Click(object sender, EventArgs e)
-        {
-            ReserveForm reserveForm = new ReserveForm();
-            var result = reserveForm.ShowDialog();
-
-            if(result == DialogResult.OK)
-            {
-                ShowReservations();
-            }            
-        }
-
-        private void dtpDate_ValueChanged(object sender, EventArgs e)
-        {
-            var dateNow = DateTime.Now;
-            if(dtpDate.Value.Date < dateNow.Date)
-            {
-                rbCanceledRes.Checked = true;
-                //ShowReservations(2);
-            }
-            ShowReservations();
+            tssLogin.Text = String.Format("Login as {0}", CurrentUser.Login);            
         }
 
         #endregion
@@ -90,8 +65,110 @@ namespace TRS.DesktopUI
 
         #endregion
 
+        #region MainForm methods
 
-        #region Showing methods
+        private void btnSearch_Click(object sender, EventArgs e)
+        {
+            if (!IsTbPhoneValid())
+            {
+                MessageBox.Show("Enter proper phone of the customer!", "Error", MessageBoxButtons.OK);
+                return;
+            }
+
+            var customer = _customerRepository.GetCustomerByPhone(tbPhone.Text);
+            if (customer == null)
+            {
+                MessageBox.Show("Customer with such phone number doesnt exists!", "Error", MessageBoxButtons.OK);
+                return;
+            }
+            var reservations = (List<Reservation>)_reservationRepository.GetReservationsByCustomerPhone(customer);
+            FillReservationsDgv(reservations);
+
+        }        
+
+        private void btnCancel_Click(object sender, EventArgs e)
+        {
+            if (!IsTableRowSelected())
+            {
+                MessageBox.Show("Select reservation!", "Error", MessageBoxButtons.OK);
+                return;
+            }
+
+            var reservationId = (int)dgvReservations[0, dgvReservations.SelectedRows[0].Index].Value;
+
+
+            var confirmResult = MessageBox.Show("Are you sure to delete reservation ??",
+                                     "Cancel reservation!!",
+                                     MessageBoxButtons.YesNo);
+            if (confirmResult == DialogResult.Yes)
+            {
+
+            }
+            _reservationRepository.CancelReservationById(reservationId, CurrentUser.Id);
+        }
+
+        private void btnReserve_Click(object sender, EventArgs e)
+        {
+            NewReservation();            
+        }
+
+        private void OnCheckedChange(object sender, EventArgs e)
+        {
+            if (rbConfirmedRes.Checked)
+            {
+                rbChecked = 1;
+            }
+            if (rbCanceledRes.Checked)
+            {
+                rbChecked = 2;
+            }
+            ShowReservations(rbChecked);
+        }
+
+        private void dtpDate_ValueChanged(object sender, EventArgs e)
+        {
+            var dateNow = DateTime.Now;
+            if(dtpDate.Value.Date < dateNow.Date)
+            {
+                rbCanceledRes.Checked = true;
+                //ShowReservations(2);
+            }
+            ShowReservations();
+        }
+
+        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            var confirmResult = MessageBox.Show("Are you sure to close program?",
+                                     "Confirm closing!!",
+                                     MessageBoxButtons.YesNo);
+            if (confirmResult == DialogResult.No)
+            {
+                e.Cancel = true;
+            }
+        }
+
+        #region MainMenu
+
+        private void mmAddReservation_Click(object sender, EventArgs e)
+        {
+            NewReservation();
+        }
+
+        private void mmHelpAbout_Click(object sender, EventArgs e)
+        {
+            ShowAboutAuthor();
+        }
+
+        private void mmFileExit_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        #endregion
+
+        #endregion
+
+        #region Showing and updating methods
 
         private void ShowReservations(int reservationStatus = 1)
         {
@@ -122,61 +199,23 @@ namespace TRS.DesktopUI
 
         }
 
-        #endregion
-
-        private void btnSearch_Click(object sender, EventArgs e)
+        private void NewReservation()
         {
-            if(!IsTbPhoneValid())
-            {
-                MessageBox.Show("Enter proper phone of the customer!", "Error", MessageBoxButtons.OK);
-                return;
-            }
+            ReserveForm reserveForm = new ReserveForm();
+            var result = reserveForm.ShowDialog();
 
-            var customer = _customerRepository.GetCustomerByPhone(tbPhone.Text);
-            if(customer == null)
+            if (result == DialogResult.OK)
             {
-                MessageBox.Show("Customer with such phone number doesnt exists!", "Error", MessageBoxButtons.OK);
-                return;
+                ShowReservations();
             }
-            var reservations = (List<Reservation>)_reservationRepository.GetReservationsByCustomerPhone(customer);
-            FillReservationsDgv(reservations);           
-
         }
 
-        private void OnCheckedChange(object sender, EventArgs e)
+        private void ShowAboutAuthor()
         {
-            if (rbConfirmedRes.Checked)
-            {
-                rbChecked = 1;
-            }
-            if (rbCanceledRes.Checked)
-            {
-                rbChecked = 2;
-            }
-            ShowReservations(rbChecked);
+            MessageBox.Show("Made by Yura Skolozdra", "About Author", MessageBoxButtons.OK);
         }
 
-        private void btnCancel_Click(object sender, EventArgs e)
-        {
-            if (!IsTableRowSelected())
-            {
-                MessageBox.Show("Select reservation!", "Error", MessageBoxButtons.OK);
-                return;
-            }
-
-            var reservationId = (int)dgvReservations[0, dgvReservations.SelectedRows[0].Index].Value;
-
-
-            var confirmResult = MessageBox.Show("Are you sure to delete reservation ??",
-                                     "Cancel reservation!!",
-                                     MessageBoxButtons.YesNo);
-            if (confirmResult == DialogResult.Yes)
-            {
-
-            }
-            _reservationRepository.CancelReservationById(reservationId, CurrentUser.Id);
-        }
-
+        #endregion        
 
         #region Validators
 
@@ -190,6 +229,7 @@ namespace TRS.DesktopUI
             return tbPhone.Text.Length >= 2;
         }
 
-        #endregion
+        #endregion                
+
     }
 }

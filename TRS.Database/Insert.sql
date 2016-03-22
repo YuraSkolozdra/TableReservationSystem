@@ -5,11 +5,11 @@ GO
 SET IDENTITY_INSERT tblUser ON;
 INSERT INTO tblUser (Id, FirstName, LastName, [Login], [PasswordHash], [Disabled])
 	VALUES
-		(1, 'Yura', 'Skolozdra', 'yurask', 'e46d54dc7e7b52067bf34306697094b0', 0),
-		(2, 'George', 'Loki','loki', '7369780dde9330cb2204792e0096a655',0),
-        (3, 'Jesse', 'Tate', 'jtate', 'e9077df1a7e9f04298b7f18f1b3690af',0),
-		(4, 'Ray', 'Johns', 'rjohns', 'dd66fe2f88738d2e8c3bb6347c4c6fdb', 0),
-		(5, 'Danny', 'Mur', 'dannymur', '8812d205f0621883321d6a750fa8eef2', 0)
+		(1, 'Yura', 'Skolozdra', 'yurask', 'e46d54dc7e7b52067bf34306697094b0', 0),--password: 321qwe
+		(2, 'George', 'Loki','loki', '7369780dde9330cb2204792e0096a655',0),--password: 321asd
+        (3, 'Jesse', 'Tate', 'jtate', 'e9077df1a7e9f04298b7f18f1b3690af',0),--password: 321zxc
+		(4, 'Ray', 'Johns', 'rjohns', 'dd66fe2f88738d2e8c3bb6347c4c6fdb', 0),--password: 321rew
+		(5, 'Danny', 'Mur', 'dannymur', '8812d205f0621883321d6a750fa8eef2', 0)--password: 321fds
 SET IDENTITY_INSERT tblUser OFF;
 
 GO
