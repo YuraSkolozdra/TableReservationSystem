@@ -4,3 +4,7 @@ TRS.DesktopUI/bin/*
 TRS.Entities/bin/*
 TRS.Repositories/bin/*
 TRS.DesktopUI/Code/Encryptor.cs
+TRS.Repositories/obj/Debug
+TRS.Entities/obj/Debug
+TRS.DesktopUI/obj/Debug
+TRS.Database/obj/Debug

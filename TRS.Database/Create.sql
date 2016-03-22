@@ -1,4 +1,4 @@
-IF NOT EXISTS(select * from sysdatabases where name='TRS_DB')
+IF NOT EXISTS(select * from sysdatabases where name='TRS')
 BEGIN
 	CREATE DATABASE TRS;
 END;
