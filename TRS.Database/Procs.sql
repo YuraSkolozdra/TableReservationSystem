@@ -81,7 +81,17 @@ CREATE PROC sp_GetTablesByDateAndSeats
 AS
 BEGIN
 	SELECT
-		DISTINCT tab.Id,
+		tab.Id,
+		tab.Rate,
+		tab.CountOfSeats,
+		loc.Id AS LocationId,
+		loc.Name AS LocationName
+	FROM tblTable tab
+    JOIN tblLocation loc
+	ON tab.LocationId = loc.Id
+	WHERE (@countOfSeats <= tab.CountOfSeats)
+	EXCEPT
+	SELECT tab.Id,
 		tab.Rate,
 		tab.CountOfSeats,
 		loc.Id AS LocationId,
@@ -90,10 +100,8 @@ BEGIN
 	JOIN tblLocation loc
 	ON tab.LocationId = loc.Id
 	LEFT OUTER JOIN tblReservation res
-	ON tab.Id = res.TableId
-	WHERE (((res.[Status] <> 1) OR (@dateIn > res.DateOut OR @dateOut < res.DateIn)) 
-				OR res.Id IS NULL) AND (@countOfSeats <= tab.CountOfSeats)
-	--ORDER BY tab.CountOfSeats, tab.Rate;
+	ON res.TableId = tab.Id
+	WHERE (NOT(@dateIn > res.DateOut OR @dateOut < res.DateIn) AND res.[Status] = 1);		
 END;
 
 GO
