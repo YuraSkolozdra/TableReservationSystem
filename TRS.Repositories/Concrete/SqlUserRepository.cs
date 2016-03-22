@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Data.SqlClient;
+﻿using System.Data.SqlClient;
 using System.Data;
 using TRS.Entities;
 using TRS.Repositories.Abstract;
@@ -45,12 +40,14 @@ namespace TRS.Repositories
                         User user = null;
                         if (reader.Read())
                         {
-                            user = new User();
-                            user.Id = (int)reader["Id"];
-                            user.FirstName = (string)reader["FirstName"];
-                            user.LastName = (string)reader["LastName"];
-                            user.Login = (string)reader["Login"];
-                            user.Disabled = (bool)reader["Disabled"];
+                            user = new User()
+                            {
+                                Id = (int)reader["Id"],
+                                FirstName = (string)reader["FirstName"],
+                                LastName = (string)reader["LastName"],
+                                Login = (string)reader["Login"],
+                                Disabled = (bool)reader["Disabled"]
+                            };                            
                         }
                         return user;
                     }

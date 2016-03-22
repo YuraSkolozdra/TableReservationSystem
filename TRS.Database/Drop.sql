@@ -16,6 +16,13 @@ END;
 
 GO
 
+IF EXISTS (SELECT name FROM sysobjects WHERE name = 'sp_GetAllReservationsByCustomerPhone' AND type = 'P')
+BEGIN
+DROP PROCEDURE sp_GetAllReservationsByCustomerPhone; 
+END;
+
+GO
+
 IF EXISTS (SELECT name FROM sysobjects WHERE name = 'sp_CancelReservationById' AND type = 'P')
 BEGIN
 DROP PROCEDURE sp_CancelReservationById; 

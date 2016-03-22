@@ -7,9 +7,8 @@ namespace TRS.Repositories.Abstract
     public interface ITableRepository
     {
         IEnumerable<Table> SellectAll();
-        Table GetTableById(int tableId);
-        IEnumerable<Table> GetBySeats(int countOfSeats);
         IEnumerable<Table> GetAvailableTables(DateTime dateIn, DateTime dateOut, int countOfSeats);
+        Table GetTableById(int tableId);
         int GetMaxCountOfSeats();
     }
 }

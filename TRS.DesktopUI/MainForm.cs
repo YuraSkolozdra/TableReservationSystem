@@ -22,6 +22,8 @@ namespace TRS.DesktopUI
 
         private readonly IReservationRepository _reservationRepository;
 
+        private readonly ICustomerRepository _customerRepository;
+
         /// <summary>
         /// represents reservation radiobutton status : 
         /// 1 - confirmed reservations
@@ -35,11 +37,15 @@ namespace TRS.DesktopUI
 
         public MainForm()
         {
-            _reservationRepository = new SqlReservationRepository(ConfigurationManager.ConnectionStrings["TRS_DBConnectionString"].ConnectionString);
+            var connectionString = ConfigurationManager.ConnectionStrings["TRS_DBConnectionString"].ConnectionString;
+            _reservationRepository = new SqlReservationRepository(connectionString);
+            _customerRepository = new SqlCustomerRepository(connectionString);
 
             InitializeComponent();
 
             InitializeDataReservations();
+
+            //tssLogin.Text = String.Format("Login as {0}", CurrentUser.Login);            
         }
 
         #endregion
@@ -49,10 +55,22 @@ namespace TRS.DesktopUI
         private void btnReserve_Click(object sender, EventArgs e)
         {
             ReserveForm reserveForm = new ReserveForm();
+            var result = reserveForm.ShowDialog();
+
+            if(result == DialogResult.OK)
+            {
+                ShowReservations();
+            }            
         }
 
         private void dtpDate_ValueChanged(object sender, EventArgs e)
         {
+            var dateNow = DateTime.Now;
+            if(dtpDate.Value.Date < dateNow.Date)
+            {
+                rbCanceledRes.Checked = true;
+                //ShowReservations(2);
+            }
             ShowReservations();
         }
 
@@ -78,8 +96,15 @@ namespace TRS.DesktopUI
         private void ShowReservations(int reservationStatus = 1)
         {
             var reservationDate = dtpDate.Value;
-            dgvReservations.Rows.Clear();
             var reservations = (List<Reservation>)_reservationRepository.GetReservationsByDate(reservationDate, reservationStatus);
+            FillReservationsDgv(reservations);
+            lblReservationCount.Text = String.Format("Count of reservations: {0}", _reservationRepository.GetCountOfReservationByDate(reservationDate));
+            lblTotalGuests.Text = String.Format("Total Guests: {0}", _reservationRepository.GetTotalGuestsOnDate(reservationDate));
+        }
+
+        private void FillReservationsDgv(List<Reservation> reservations)
+        {
+            dgvReservations.Rows.Clear();
 
             for (var i = 0; i < reservations.Count; i++)
             {
@@ -95,15 +120,27 @@ namespace TRS.DesktopUI
                 dgvReservations[8, i].Value = reservations[i].Table.CountOfSeats;
             }
 
-            lblReservationCount.Text = String.Format("Count of reservations: {0}", _reservationRepository.GetCountOfReservationByDate(reservationDate));
-            lblTotalGuests.Text = String.Format("Total Guests: {0}", _reservationRepository.GetTotalGuestsOnDate(reservationDate));
         }
 
         #endregion
 
         private void btnSearch_Click(object sender, EventArgs e)
         {
-            ShowReservations(rbChecked);
+            if(!IsTbPhoneValid())
+            {
+                MessageBox.Show("Enter proper phone of the customer!", "Error", MessageBoxButtons.OK);
+                return;
+            }
+
+            var customer = _customerRepository.GetCustomerByPhone(tbPhone.Text);
+            if(customer == null)
+            {
+                MessageBox.Show("Customer with such phone number doesnt exists!", "Error", MessageBoxButtons.OK);
+                return;
+            }
+            var reservations = (List<Reservation>)_reservationRepository.GetReservationsByCustomerPhone(customer);
+            FillReservationsDgv(reservations);           
+
         }
 
         private void OnCheckedChange(object sender, EventArgs e)
@@ -116,6 +153,7 @@ namespace TRS.DesktopUI
             {
                 rbChecked = 2;
             }
+            ShowReservations(rbChecked);
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
@@ -145,6 +183,11 @@ namespace TRS.DesktopUI
         private bool IsTableRowSelected()
         {
             return dgvReservations.SelectedRows.Count > 0;
+        }
+
+        private bool IsTbPhoneValid()
+        {
+            return tbPhone.Text.Length >= 2;
         }
 
         #endregion

@@ -11,19 +11,24 @@ namespace TRS.Repositories.Concrete
     {
         #region Queries
 
-        //TODO: Edit query
         private const string GetReservationsByDateQuery = "sp_GetReservationsByDate";
 
-        private const string GetCountOfResByDateQuery = @"SELECT COUNT(res.Id) AS CountOfRes FROM tblReservation res 
-                                                        WHERE (DATEDIFF(day, res.dateIn, @reservationDate) = 0);";
+        private const string GetAllReservationsByCustomerPhoneQuery = "sp_GetAllReservationsByCustomerPhone";
 
-        private const string GetTotalGuestsOnDateQuery = @"SELECT SUM(tab.CountOfSeats) AS TotalGuests FROM tblReservation res 
-	                                                        JOIN tblTable tab ON res.TableId = tab.Id
+
+        private const string GetCountOfResByDateQuery = @"SELECT COUNT(res.Id) AS CountOfRes 
+                                                            FROM tblReservation res 
+                                                                WHERE (DATEDIFF(day, res.dateIn, @reservationDate) = 0);";
+
+        private const string GetTotalGuestsOnDateQuery = @"SELECT SUM(tab.CountOfSeats) AS TotalGuests 
+                                                            FROM tblReservation res 
+	                                                        JOIN tblTable tab 
+                                                            ON res.TableId = tab.Id
 	                                                            WHERE (DATEDIFF(day, res.dateIn, @reservationDate) = 0);";
 
-        private const string spReserveTable = "sp_ReserveTable";
-
         private const string spGetCostOfReservationQuery = "sp_GetCostOfReservation";
+
+        private const string spReserveTable = "sp_ReserveTable";
 
         private const string spCancelReservationByIdQuery = "sp_CancelReservationById";
 
@@ -52,7 +57,6 @@ namespace TRS.Repositories.Concrete
                     command.CommandText = GetReservationsByDateQuery;
                     command.Parameters.AddWithValue("@reservationDate", reservationDate);
                     command.Parameters.AddWithValue("@reservationStatus", reservationStatus);
-
 
                     using (SqlDataReader reader = command.ExecuteReader())
                     {
@@ -97,10 +101,60 @@ namespace TRS.Repositories.Concrete
             }
         }
 
-        //maybe we dont need it
-        public IEnumerable<Reservation> SellectAll()
+        public IEnumerable<Reservation> GetReservationsByCustomerPhone(Customer customer)
         {
-            throw new NotImplementedException();
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                using (SqlCommand command = new SqlCommand())
+                {
+                    command.Connection = connection;
+                    command.CommandType = System.Data.CommandType.StoredProcedure;
+                    command.CommandText = GetAllReservationsByCustomerPhoneQuery;
+                    command.Parameters.AddWithValue("@customerPhone", customer.Phone);
+
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        var reservations = new List<Reservation>();
+                        while (reader.Read())
+                        {
+                            int id = (int)reader["Id"];
+                            var table = new Table()
+                            {
+                                Id = (int)reader["TableId"],
+                                Rate = (decimal)reader["Rate"],
+                                CountOfSeats = (int)reader["CountOfSeats"],
+                                Location = new Location()
+                                {
+                                    Id = (int)reader["LocationId"],
+                                    Name = (string)reader["LocationName"]
+                                }
+                            };
+                            var customerRes = new Customer()
+                            {
+                                Id = (int)reader["CustomerId"],
+                                FirstName = (string)reader["FirstName"],
+                                LastName = (string)reader["LastName"],
+                                Phone = (string)reader["Phone"]
+                            };
+                            var reservation = new Reservation()
+                            {
+                                Id = id,
+                                Table = table,
+                                Customer = customerRes,
+                                DateIn = (DateTime)reader["DateIn"],
+                                DateOut = (DateTime)reader["DateOut"],
+                                Status = (int)reader["Status"],
+                                Cost = (decimal)reader["Cost"],
+                                UserId = (int)reader["UserId"]
+                            };
+                            reservations.Add(reservation);
+                        }
+                        return reservations;
+                    }
+                }
+            }
         }
 
         public int GetCountOfReservationByDate(DateTime reservationDate)
@@ -156,8 +210,6 @@ namespace TRS.Repositories.Concrete
                 connection.Open();
                 using (SqlCommand command = new SqlCommand())
                 {
-                    decimal cost = 0;
-
                     command.Connection = connection;
                     command.CommandType = CommandType.StoredProcedure;
                     command.CommandText = spGetCostOfReservationQuery;
@@ -174,17 +226,13 @@ namespace TRS.Repositories.Concrete
 
                     command.ExecuteNonQuery();
 
-                    cost = (decimal)command.Parameters["@cost"].Value;
-
-                    return cost;
+                    return (decimal)command.Parameters["@cost"].Value;
                 }
             }
         }
 
         public int ReserveTable(Reservation reservation)
         {
-            int reservationId = 0;
-
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
@@ -210,9 +258,7 @@ namespace TRS.Repositories.Concrete
 
                     command.ExecuteNonQuery();
 
-                    reservationId = (int)command.Parameters["@reservationId"].Value;
-
-                    return reservationId;
+                    return (int)command.Parameters["@reservationId"].Value;
                 }
             }
         }

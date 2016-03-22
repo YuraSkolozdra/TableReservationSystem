@@ -48,7 +48,6 @@ namespace TRS.DesktopUI.Forms
             InitializeTimeInputs(dtpDate.Value.Date);
             InitializeDataTables();
             InitializeCountOfSeats();
-            Show();
         }
 
         #endregion
@@ -240,6 +239,7 @@ namespace TRS.DesktopUI.Forms
                                      MessageBoxButtons.YesNo);
             if (confirmResult == DialogResult.Yes)
             {
+                this.DialogResult = DialogResult.OK;
                 this.Close();
             }
         }
@@ -266,8 +266,8 @@ namespace TRS.DesktopUI.Forms
 
             decimal cost = _reservationRepository.GetCostOfReservation(table, dateIn, dateOut);
 
-            lblSelectedTable.Text = string.Format("Selected table {0}", table.Id);
-            lblCost.Text = string.Format("Cost {0}", cost);
+            lblSelectedTable.Text = string.Format("Selected table\t {0}", table.Id);
+            lblCost.Text = string.Format("Cost\t {0:C}", cost);
         }
 
         private void cbTimeFrom_SelectedIndexChanged(object sender, EventArgs e)

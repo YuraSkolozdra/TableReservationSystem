@@ -47,62 +47,57 @@ BEGIN
 	ON res.CustomerId = cust.Id
 	JOIN tblLocation loc
 	ON tab.LocationId = loc.Id
-	WHERE (DATEDIFF(day, res.dateIn, @reservationDate) = 0) AND res.[Status] = @reservationStatus;		
+	WHERE (DATEDIFF(day, res.dateIn, @reservationDate) = 0) AND 
+			res.[Status] = @reservationStatus;		
 END;
 
 GO
 
-
-
-CREATE PROC sp_CancelReservationById
-	@reservationId INT,
-	@userId INT
-AS
-BEGIN
-	IF NOT EXISTS(SELECT 1 FROM tblReservation res 
-		WHERE res.Id = @reservationId)
-			BEGIN
-				RAISERROR('Reservation with such id doesnt exist', 11, 238);
-			END
-	UPDATE tblReservation
-		SET [Status] = 2,
-		     UserId = @userId
-		WHERE Id = @reservationId;
-	RETURN 0;
-END;
-
-GO
-
-
-ALTER PROC sp_GetTablesByDateAndSeats
-	@dateIn DATETIME,
-	@dateOut DATETIME,
-	@countOfSeats INT
+CREATE PROC sp_GetAllReservationsByCustomerPhone
+	@customerPhone VARCHAR(50)
 AS
 BEGIN
 	SELECT
-		tab.Id,
+		res.Id,
+		tab.Id as TableId,
 		tab.Rate,
 		tab.CountOfSeats,
-		loc.Id AS LocationId,
-		loc.Name AS LocationName
-	FROM tblTable tab
-    JOIN tblLocation loc
-	ON tab.LocationId = loc.Id
-	WHERE (@countOfSeats <= tab.CountOfSeats)
-	EXCEPT
-	SELECT tab.Id,
-		tab.Rate,
-		tab.CountOfSeats,
-		loc.Id AS LocationId,
-		loc.Name AS LocationName
-	FROM tblTable tab
+		loc.Id as LocationId,
+		loc.Name as LocationName,
+		cust.Id as CustomerId,
+		cust.FirstName as FirstName,
+		cust.LastName as LastName,
+		cust.Phone as Phone,
+		res.DateIn,
+		res.DateOut,
+		res.[Status],
+		res.Cost,
+		res.UserId
+	FROM tblReservation res
+	JOIN tblTable tab
+	ON res.Id = tab.Id
+	JOIN tblCustomer cust
+	ON res.CustomerId = cust.Id
 	JOIN tblLocation loc
 	ON tab.LocationId = loc.Id
-	LEFT OUTER JOIN tblReservation res
-	ON res.TableId = tab.Id
-	WHERE (NOT(@dateIn > res.DateOut OR @dateOut < res.DateIn) AND res.[Status] = 1)
-	ORDER BY tab.Rate, tab.CountOfSeats;		
+	WHERE cust.Phone = @customerPhone;		
+END;
+
+GO
+
+CREATE PROCEDURE sp_GetCostOfReservation
+					@tableId INT,
+					@dateIn DATETIME,
+					@dateOut DATETIME,
+					@cost NUMERIC(18, 4) OUT
+AS
+BEGIN
+	DECLARE @rate NUMERIC(18, 4);
+	DECLARE @minutes INT;
+
+	SELECT @rate = tab.Rate FROM tblTable tab WHERE tab.Id = @tableId;
+	SELECT @minutes = DATEDIFF(minute, @dateIn, @dateOut);
+	SET @cost = (@rate / 30) * @minutes;		
 END;
 
 GO
@@ -161,19 +156,59 @@ END;
 
 GO
 
-CREATE PROCEDURE sp_GetCostOfReservation
-					@tableId INT,
-					@dateIn DATETIME,
-					@dateOut DATETIME,
-					@cost NUMERIC(18, 4) OUT
+
+CREATE PROC sp_CancelReservationById
+	@reservationId INT,
+	@userId INT
 AS
 BEGIN
-	DECLARE @rate NUMERIC(18, 4);
-	DECLARE @minutes INT;
-
-	SELECT @rate = tab.Rate FROM tblTable tab WHERE tab.Id = @tableId;
-	SELECT @minutes = DATEDIFF(minute, @dateIn, @dateOut);
-	SET @cost = (@rate / 30) * @minutes;		
+	IF NOT EXISTS(SELECT 1 FROM tblReservation res 
+		WHERE res.Id = @reservationId)
+			BEGIN
+				RAISERROR('Reservation with such id doesnt exist', 11, 238);
+			END
+	UPDATE tblReservation
+		SET [Status] = 2,
+		     UserId = @userId
+		WHERE Id = @reservationId;
+	RETURN 0;
 END;
 
 GO
+
+
+CREATE PROC sp_GetTablesByDateAndSeats
+	@dateIn DATETIME,
+	@dateOut DATETIME,
+	@countOfSeats INT
+AS
+BEGIN
+	SELECT
+		tab.Id,
+		tab.Rate,
+		tab.CountOfSeats,
+		loc.Id AS LocationId,
+		loc.Name AS LocationName
+	FROM tblTable tab
+    JOIN tblLocation loc
+	ON tab.LocationId = loc.Id
+	WHERE (@countOfSeats <= tab.CountOfSeats)
+	EXCEPT
+	SELECT tab.Id,
+		tab.Rate,
+		tab.CountOfSeats,
+		loc.Id AS LocationId,
+		loc.Name AS LocationName
+	FROM tblTable tab
+	JOIN tblLocation loc
+	ON tab.LocationId = loc.Id
+	LEFT OUTER JOIN tblReservation res
+	ON res.TableId = tab.Id
+	WHERE (NOT(@dateIn > res.DateOut OR @dateOut < res.DateIn) AND res.[Status] = 1)
+	ORDER BY tab.Rate, tab.CountOfSeats;		
+END;
+
+GO
+
+
+

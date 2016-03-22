@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ReserveForm));
             this.grbReserveData = new System.Windows.Forms.GroupBox();
             this.grbSummary = new System.Windows.Forms.GroupBox();
             this.lblSelectedTable = new System.Windows.Forms.Label();
@@ -36,6 +37,10 @@
             this.btnCancel = new System.Windows.Forms.Button();
             this.gtbTables = new System.Windows.Forms.GroupBox();
             this.dgvTables = new System.Windows.Forms.DataGridView();
+            this.ColTableNum = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ColRate = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ColCountOfSeats = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ColLocation = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.gbResData = new System.Windows.Forms.GroupBox();
             this.lblCountOfPeople = new System.Windows.Forms.Label();
             this.cbCountOfPeople = new System.Windows.Forms.ComboBox();
@@ -53,10 +58,6 @@
             this.tbPhone = new System.Windows.Forms.TextBox();
             this.lblLastName = new System.Windows.Forms.Label();
             this.lblFirstName = new System.Windows.Forms.Label();
-            this.ColTableNum = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ColRate = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ColCountOfSeats = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ColLocation = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.grbReserveData.SuspendLayout();
             this.grbSummary.SuspendLayout();
             this.gtbTables.SuspendLayout();
@@ -67,7 +68,10 @@
             // 
             // grbReserveData
             // 
-            this.grbReserveData.BackColor = System.Drawing.SystemColors.Control;
+            this.grbReserveData.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.grbReserveData.BackColor = System.Drawing.Color.LightBlue;
             this.grbReserveData.Controls.Add(this.grbSummary);
             this.grbReserveData.Controls.Add(this.btnReserve);
             this.grbReserveData.Controls.Add(this.btnCancel);
@@ -112,6 +116,8 @@
             // btnReserve
             // 
             this.btnReserve.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.btnReserve.Image = global::TRS.DesktopUI.Properties.Resources.symbol_check_icon;
+            this.btnReserve.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnReserve.Location = new System.Drawing.Point(492, 557);
             this.btnReserve.Name = "btnReserve";
             this.btnReserve.Size = new System.Drawing.Size(186, 39);
@@ -123,6 +129,8 @@
             // btnCancel
             // 
             this.btnCancel.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.btnCancel.Image = global::TRS.DesktopUI.Properties.Resources.symbol_delete_icon;
+            this.btnCancel.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnCancel.Location = new System.Drawing.Point(706, 557);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(187, 39);
@@ -143,6 +151,7 @@
             // 
             // dgvTables
             // 
+            this.dgvTables.BackgroundColor = System.Drawing.Color.LightBlue;
             this.dgvTables.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.dgvTables.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvTables.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
@@ -155,6 +164,27 @@
             this.dgvTables.Size = new System.Drawing.Size(516, 385);
             this.dgvTables.TabIndex = 0;
             this.dgvTables.SelectionChanged += new System.EventHandler(this.dgvTables_SelectionChanged);
+            // 
+            // ColTableNum
+            // 
+            this.ColTableNum.HeaderText = "Table Number";
+            this.ColTableNum.Name = "ColTableNum";
+            // 
+            // ColRate
+            // 
+            this.ColRate.HeaderText = "Rate";
+            this.ColRate.Name = "ColRate";
+            // 
+            // ColCountOfSeats
+            // 
+            this.ColCountOfSeats.HeaderText = "Count of seats";
+            this.ColCountOfSeats.Name = "ColCountOfSeats";
+            // 
+            // ColLocation
+            // 
+            this.ColLocation.HeaderText = "Location";
+            this.ColLocation.Name = "ColLocation";
+            this.ColLocation.Width = 150;
             // 
             // gbResData
             // 
@@ -197,6 +227,8 @@
             // btnCheckAvailability
             // 
             this.btnCheckAvailability.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.btnCheckAvailability.Image = global::TRS.DesktopUI.Properties.Resources.search_button;
+            this.btnCheckAvailability.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnCheckAvailability.Location = new System.Drawing.Point(24, 205);
             this.btnCheckAvailability.Name = "btnCheckAvailability";
             this.btnCheckAvailability.Size = new System.Drawing.Size(222, 29);
@@ -325,34 +357,15 @@
             this.lblFirstName.TabIndex = 6;
             this.lblFirstName.Text = "First name";
             // 
-            // ColTableNum
-            // 
-            this.ColTableNum.HeaderText = "Table Number";
-            this.ColTableNum.Name = "ColTableNum";
-            // 
-            // ColRate
-            // 
-            this.ColRate.HeaderText = "Rate";
-            this.ColRate.Name = "ColRate";
-            // 
-            // ColCountOfSeats
-            // 
-            this.ColCountOfSeats.HeaderText = "Count of seats";
-            this.ColCountOfSeats.Name = "ColCountOfSeats";
-            // 
-            // ColLocation
-            // 
-            this.ColLocation.HeaderText = "Location";
-            this.ColLocation.Name = "ColLocation";
-            this.ColLocation.Width = 150;
-            // 
             // ReserveForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.Color.LightBlue;
             this.ClientSize = new System.Drawing.Size(1044, 651);
             this.Controls.Add(this.grbReserveData);
             this.Font = new System.Drawing.Font("Georgia", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "ReserveForm";
             this.Text = "Make a reservation";
             this.grbReserveData.ResumeLayout(false);

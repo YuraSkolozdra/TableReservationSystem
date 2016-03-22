@@ -18,10 +18,15 @@ namespace TRS.Repositories.Concrete
                                                     ON tab.LocationId = loc.Id 
                                                         WHERE tab.Id = @tableId;";
 
-        private const string PriceQuery = @"SELECT Id, Rate, CountOfSeats FROM tblTable ORDER BY Rate;";
+        private const string SelectAllQuery = @"SELECT tab.Id, tab.Rate, tab.CountOfSeats,
+                                                    loc.Id, loc.Name 
+                                                    FROM tblTable tab
+                                                    JOIN tblLocation loc
+                                                    ON tab.LocationId = loc.Id
+                                                    ORDER BY Rate;";
 
         private const string GetBySeatsQuery = @"SELECT tab.Id, tab.Rate, tab.CountOfSeats, 
-                                                    loc.Id, loc.Name 
+                                                    loc.Id AS LocationId, loc.Name AS LocationName 
                                                         FROM tblTable tab 
                                                         JOIN tblLocation loc 
                                                         ON tab.LocationId = loc.Id 
@@ -43,9 +48,39 @@ namespace TRS.Repositories.Concrete
 
         #region ITableRepository
 
-        public IEnumerable<Table> GetBySeats(int countOfSeats)
+        public IEnumerable<Table> SellectAll()
         {
-            throw new NotImplementedException();
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                using (SqlCommand command = new SqlCommand())
+                {
+                    command.Connection = connection;
+                    command.CommandType = CommandType.Text;
+                    command.CommandText = SelectAllQuery;
+
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        var tables = new List<Table>();
+                        while (reader.Read())
+                        {
+                            tables.Add(new Table()
+                            {
+                                Id = (int)reader["Id"],
+                                Rate = (decimal)reader["Rate"],
+                                CountOfSeats = (int)reader["CountOfSeats"],
+                                Location = new Location()
+                                {
+                                    Id = (int)reader["LocationId"],
+                                    Name = (string)reader["LocationName"]
+                                }
+                            });
+                        }
+                        return tables;
+                    }
+                }
+            }
         }
 
         public IEnumerable<Table> GetAvailableTables(DateTime dateIn, DateTime dateOut, int countOfSeats)
@@ -68,20 +103,17 @@ namespace TRS.Repositories.Concrete
                         var tables = new List<Table>();
                         while (reader.Read())
                         {
-                            int id = (int)reader["Id"];
-                            decimal rate = (decimal)reader["Rate"];
-                            int seats = (int)reader["CountOfSeats"];
-                            int locationId = (int)reader["LocationId"];
-                            string locationName = (string)reader["LocationName"];
-
-                            var table = new Table()
+                            tables.Add(new Table()
                             {
-                                Id = id,
-                                Rate = rate,
-                                CountOfSeats = seats,
-                                Location = new Location() { Id = locationId, Name = locationName }
-                            };
-                            tables.Add(table);
+                                Id = (int)reader["Id"],
+                                Rate = (decimal)reader["Rate"],
+                                CountOfSeats = (int)reader["CountOfSeats"],
+                                Location = new Location()
+                                {
+                                    Id = (int)reader["LocationId"],
+                                    Name = (string)reader["LocationName"]
+                                }
+                            });
                         }
                         return tables;
                     }
@@ -89,29 +121,35 @@ namespace TRS.Repositories.Concrete
             }
         }
 
-        public IEnumerable<Table> SellectAll()
+        public Table GetTableById(int tableId)
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
-
                 using (SqlCommand command = new SqlCommand())
                 {
                     command.Connection = connection;
-                    command.CommandType = System.Data.CommandType.Text;
-                    command.CommandText = PriceQuery;
-
+                    command.CommandType = CommandType.Text;
+                    command.CommandText = GetByIdQuery;
+                    command.Parameters.AddWithValue("@tableId", tableId);
                     using (SqlDataReader reader = command.ExecuteReader())
                     {
-                        var tables = new List<Table>();
-                        while (reader.Read())
+                        Table table = null;
+                        if (reader.Read())
                         {
-                            int id = (int)reader["Id"];
-                            decimal rate = (decimal)reader["Rate"];
-                            int countOfSeats = (int)reader["CountOfSeats"];
-                            tables.Add(new Table() { Id = id, Rate = rate, CountOfSeats = countOfSeats });
+                            table = new Table()
+                            {
+                                Id = (int)reader["Id"],
+                                Rate = (decimal)reader["Rate"],
+                                CountOfSeats = (int)reader["CountOfSeats"],
+                                Location = new Location()
+                                {
+                                    Id = (int)reader["LocationId"],
+                                    Name = (string)reader["LocationName"]
+                                }
+                            };
                         }
-                        return tables;
+                        return table;
                     }
                 }
             }
@@ -141,37 +179,6 @@ namespace TRS.Repositories.Concrete
                 }
             }
         }
-
-        public Table GetTableById(int tableId)
-        {
-            using (SqlConnection connection = new SqlConnection(_connectionString))
-            {
-                connection.Open();
-                using (SqlCommand command = new SqlCommand())
-                {
-                    command.Connection = connection;
-                    command.CommandType = CommandType.Text;
-                    command.CommandText = GetByIdQuery;
-                    command.Parameters.AddWithValue("@tableId", tableId);
-                    using (SqlDataReader reader = command.ExecuteReader())
-                    {
-                        Table table = null;
-                        if (reader.Read())
-                        {
-                            table = new Table();
-                            table.Id = (int)reader["Id"];
-                            table.Rate = (decimal)reader["Rate"];
-                            table.CountOfSeats = (int)reader["CountOfSeats"];
-                            var locationId = (int)reader["LocationId"];
-                            var locationName = (string)reader["LocationName"];
-                            table.Location = new Location() { Id = locationId, Name = locationName };
-                        }
-                        return table;
-                    }
-                }
-            }
-        }
-
 
         #endregion
     }

@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LoginForm));
             this.grbLogin = new System.Windows.Forms.GroupBox();
             this.tbPassword = new System.Windows.Forms.TextBox();
             this.tbLogin = new System.Windows.Forms.TextBox();
@@ -47,50 +48,53 @@
             this.grbLogin.Controls.Add(this.tbLogin);
             this.grbLogin.Controls.Add(this.lblPassword);
             this.grbLogin.Controls.Add(this.lblLogin);
-            this.grbLogin.Location = new System.Drawing.Point(12, 12);
+            this.grbLogin.Location = new System.Drawing.Point(16, 14);
             this.grbLogin.Name = "grbLogin";
-            this.grbLogin.Size = new System.Drawing.Size(280, 92);
+            this.grbLogin.Size = new System.Drawing.Size(402, 140);
             this.grbLogin.TabIndex = 0;
             this.grbLogin.TabStop = false;
             // 
             // tbPassword
             // 
-            this.tbPassword.Location = new System.Drawing.Point(97, 58);
+            this.tbPassword.Location = new System.Drawing.Point(129, 72);
             this.tbPassword.Name = "tbPassword";
             this.tbPassword.PasswordChar = '*';
-            this.tbPassword.Size = new System.Drawing.Size(160, 20);
+            this.tbPassword.Size = new System.Drawing.Size(212, 21);
             this.tbPassword.TabIndex = 3;
             // 
             // tbLogin
             // 
-            this.tbLogin.Location = new System.Drawing.Point(97, 28);
+            this.tbLogin.Location = new System.Drawing.Point(129, 32);
             this.tbLogin.Name = "tbLogin";
-            this.tbLogin.Size = new System.Drawing.Size(160, 20);
+            this.tbLogin.Size = new System.Drawing.Size(212, 21);
             this.tbLogin.TabIndex = 2;
             // 
             // lblPassword
             // 
             this.lblPassword.AutoSize = true;
-            this.lblPassword.Location = new System.Drawing.Point(19, 58);
+            this.lblPassword.Location = new System.Drawing.Point(25, 75);
             this.lblPassword.Name = "lblPassword";
-            this.lblPassword.Size = new System.Drawing.Size(53, 13);
+            this.lblPassword.Size = new System.Drawing.Size(60, 15);
             this.lblPassword.TabIndex = 1;
             this.lblPassword.Text = "Password";
             // 
             // lblLogin
             // 
             this.lblLogin.AutoSize = true;
-            this.lblLogin.Location = new System.Drawing.Point(19, 28);
+            this.lblLogin.Location = new System.Drawing.Point(25, 32);
             this.lblLogin.Name = "lblLogin";
-            this.lblLogin.Size = new System.Drawing.Size(33, 13);
+            this.lblLogin.Size = new System.Drawing.Size(39, 15);
             this.lblLogin.TabIndex = 0;
             this.lblLogin.Text = "Login";
             // 
             // btnLogin
             // 
-            this.btnLogin.Location = new System.Drawing.Point(69, 117);
+            this.btnLogin.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.btnLogin.Image = global::TRS.DesktopUI.Properties.Resources.symbol_check_icon;
+            this.btnLogin.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnLogin.Location = new System.Drawing.Point(55, 160);
             this.btnLogin.Name = "btnLogin";
-            this.btnLogin.Size = new System.Drawing.Size(75, 23);
+            this.btnLogin.Size = new System.Drawing.Size(155, 35);
             this.btnLogin.TabIndex = 1;
             this.btnLogin.Text = "Login";
             this.btnLogin.UseVisualStyleBackColor = true;
@@ -99,9 +103,12 @@
             // btnCancel
             // 
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(159, 117);
+            this.btnCancel.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.btnCancel.Image = global::TRS.DesktopUI.Properties.Resources.symbol_delete_icon;
+            this.btnCancel.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnCancel.Location = new System.Drawing.Point(233, 160);
             this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(75, 23);
+            this.btnCancel.Size = new System.Drawing.Size(150, 35);
             this.btnCancel.TabIndex = 2;
             this.btnCancel.Text = "Cancel";
             this.btnCancel.UseVisualStyleBackColor = true;
@@ -109,14 +116,17 @@
             // LoginForm
             // 
             this.AcceptButton = this.btnLogin;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.Color.LightBlue;
             this.CancelButton = this.btnCancel;
-            this.ClientSize = new System.Drawing.Size(304, 152);
+            this.ClientSize = new System.Drawing.Size(445, 209);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnLogin);
             this.Controls.Add(this.grbLogin);
+            this.Font = new System.Drawing.Font("Georgia", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "LoginForm";
