@@ -28,6 +28,8 @@ namespace TRS.Repositories.Concrete
 
         private const string spGetCostOfReservationQuery = "sp_GetCostOfReservation";
 
+        private const string spCancelReservationByIdQuery = "sp_CancelReservationById";
+
         #endregion        
 
         #region Constructors
@@ -40,12 +42,7 @@ namespace TRS.Repositories.Concrete
 
         #region IReservationRepository
 
-        /// <summary>
-        /// Search all reservation for a specific date
-        /// </summary>
-        /// <param name="reservationDate"></param>
-        /// <returns>Collection of reservation</returns>
-        public IEnumerable<Reservation> GetReservationsByDate(DateTime reservationDate)
+        public IEnumerable<Reservation> GetReservationsByDate(DateTime reservationDate, int reservationStatus = 1)
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
@@ -57,6 +54,7 @@ namespace TRS.Repositories.Concrete
                     command.CommandType = System.Data.CommandType.StoredProcedure;
                     command.CommandText = GetReservationsByDateQuery;
                     command.Parameters.AddWithValue("@reservationDate", reservationDate);
+                    command.Parameters.AddWithValue("@reservationStatus", reservationStatus);
 
 
                     using (SqlDataReader reader = command.ExecuteReader())
@@ -65,24 +63,35 @@ namespace TRS.Repositories.Concrete
                         while (reader.Read())
                         {
                             int id = (int)reader["Id"];
-                            int tableId = (int)reader["TableId"];
-                            decimal rate = (decimal)reader["Rate"];
-                            int countOfSeats = (int)reader["CountOfSeats"];
-                            int locationId = (int)reader["LocationId"];
-                            string locationName = (string)reader["LocationName"];
-                            int customerId = (int)reader["CustomerId"];
-                            string firstName = (string)reader["FirstName"];
-                            string lastName = (string)reader["LastName"];
-                            string phone = (string)reader["Phone"];
-                            DateTime dateIn = (DateTime)reader["DateIn"];
-                            DateTime dateOut = (DateTime)reader["DateOut"];
-                            int status = (int)reader["Status"];
-                            decimal cost = (decimal)reader["Cost"];
-                            int userId = (int)reader["UserId"];
-                            var location = new Location() { Id = locationId, Name = locationName };
-                            var table = new Table() { Id = tableId, Rate = rate, CountOfSeats = countOfSeats, Location = location };
-                            var customer = new Customer() { Id = customerId, FirstName = firstName, LastName = lastName, Phone = phone };
-                            var reservation = new Reservation() { Id = id, Table = table, Customer = customer, DateIn = dateIn, DateOut = dateOut, Status = status, Cost = cost, UserId = userId };
+                            var table = new Table()
+                            {
+                                Id = (int)reader["TableId"],
+                                Rate = (decimal)reader["Rate"],
+                                CountOfSeats = (int)reader["CountOfSeats"],
+                                Location = new Location()
+                                {
+                                    Id = (int)reader["LocationId"],
+                                    Name = (string)reader["LocationName"]
+                                }
+                            };
+                            var customer = new Customer()
+                            {
+                                Id = (int)reader["CustomerId"],
+                                FirstName = (string)reader["FirstName"],
+                                LastName = (string)reader["LastName"],
+                                Phone = (string)reader["Phone"]
+                            };
+                            var reservation = new Reservation()
+                            {
+                                Id = id,
+                                Table = table,
+                                Customer = customer,
+                                DateIn = (DateTime)reader["DateIn"],
+                                DateOut = (DateTime)reader["DateOut"],
+                                Status = (int)reader["Status"],
+                                Cost = (decimal)reader["Cost"],
+                                UserId = (int)reader["UserId"]
+                            };
                             reservations.Add(reservation);
                         }
                         return reservations;
@@ -91,6 +100,7 @@ namespace TRS.Repositories.Concrete
             }
         }
 
+        //maybe we dont need it
         public IEnumerable<Reservation> SellectAll()
         {
             throw new NotImplementedException();
@@ -208,6 +218,26 @@ namespace TRS.Repositories.Concrete
                     return reservationId;
                 }
             }
+        }
+
+        public bool CancelReservationById(Reservation reservation, int userId)
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                using (SqlCommand command = new SqlCommand())
+                {
+                    command.Connection = connection;
+                    command.CommandType = System.Data.CommandType.StoredProcedure;
+                    command.CommandText = GetReservationsByDateQuery;
+                    command.Parameters.AddWithValue("@reservationId", reservation.Id);
+                    command.Parameters.AddWithValue("@userId", userId);
+
+                    return command.ExecuteNonQuery() == 0 ? true : false;
+                }
+            }
+
         }
 
         #endregion

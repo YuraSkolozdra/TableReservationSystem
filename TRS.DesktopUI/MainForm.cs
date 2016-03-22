@@ -17,15 +17,24 @@ namespace TRS.DesktopUI
 {
     public partial class MainForm : Form
     {
+        #region Private Fields
+
         private readonly IReservationRepository _reservationRepository;
 
+        #endregion
+
+        #region Constructors
 
         public MainForm()
         {
             _reservationRepository = new SqlReservationRepository(ConfigurationManager.ConnectionStrings["TRS_DBConnectionString"].ConnectionString);
 
             InitializeComponent();
-        }        
+        }
+
+        #endregion
+
+        #region Component's methods
 
         private void btnReserve_Click(object sender, EventArgs e)
         {
@@ -37,18 +46,22 @@ namespace TRS.DesktopUI
             UpdateReservations();
         }
 
+        #endregion
+
         #region Initialize methods
 
-        private void InitializeReservations()
+        private void InitializeDatareservations()
         {
-            
+            dgvReservations.ReadOnly = true;
+            dgvReservations.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            dgvReservations.MultiSelect = false;
         }
 
         #endregion
 
 
         #region Update methods
-        
+
         private void UpdateReservations()
         {
             var reservationDate = dtpDate.Value;

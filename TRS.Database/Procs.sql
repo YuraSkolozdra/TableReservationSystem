@@ -20,7 +20,8 @@ END;
 GO
 
 CREATE PROC sp_GetReservationsByDate
-	@reservationDate DATETIME
+	@reservationDate DATETIME,
+	@reservationStatus int
 AS
 BEGIN
 	SELECT
@@ -46,7 +47,28 @@ BEGIN
 	ON res.CustomerId = cust.Id
 	JOIN tblLocation loc
 	ON tab.LocationId = loc.Id
-	WHERE (DATEDIFF(day, res.dateIn, @reservationDate) = 0) AND res.[Status] = 1;		
+	WHERE (DATEDIFF(day, res.dateIn, @reservationDate) = 0) AND res.[Status] = @reservationStatus;		
+END;
+
+GO
+
+
+
+CREATE PROC sp_CancelReservationById
+	@reservationId INT,
+	@userId INT
+AS
+BEGIN
+	IF NOT EXISTS(SELECT 1 FROM tblReservation res 
+		WHERE res.Id = @reservationId)
+			BEGIN
+				RAISERROR('Reservation with such id doesnt exist', 11, 238);
+			END
+	UPDATE tblReservation
+		SET [Status] = 2,
+		     UserId = @userId
+		WHERE Id = @reservationId;
+	RETURN 0;
 END;
 
 GO
@@ -75,14 +97,6 @@ BEGIN
 END;
 
 GO
-
-DECLARE @dateIn DATETIME;
-SET @dateIn = CAST('2016-03-27 19:00:00.000' AS DATETIME);
-
-DECLARE @dateOut DATETIME;
-SET @dateIn = CAST('2016-03-27 20:00:00.000' AS DATETIME);
-
-EXEC sp_GetTablesByDateAndSeats @dateIn, @dateOut, 1;
 
 CREATE PROCEDURE sp_ReserveTable
 	@firstName NVARCHAR(50),

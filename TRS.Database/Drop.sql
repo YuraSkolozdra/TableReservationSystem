@@ -16,7 +16,21 @@ END;
 
 GO
 
+IF EXISTS (SELECT name FROM sysobjects WHERE name = 'sp_CancelReservationById' AND type = 'P')
+BEGIN
+DROP PROCEDURE sp_CancelReservationById; 
+END;
+
+GO
+
 IF EXISTS (SELECT name FROM sysobjects WHERE name = 'sp_GetTablesByDateAndSeats' AND type = 'P')
+BEGIN
+DROP PROCEDURE sp_GetTablesByDateAndSeats;
+END;
+
+GO
+
+IF EXISTS (SELECT name FROM sysobjects WHERE name = 'sp_GetCostOfReservation' AND type = 'P')
 BEGIN
 DROP PROCEDURE sp_GetTablesByDateAndSeats;
 END;
