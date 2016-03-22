@@ -22,7 +22,7 @@ namespace TRS.DesktopUI.Forms
 
         //add open and close
         private const int openHours = 8;
-        private const int closeHours = 24;
+        private const int closeHours = 23;
 
         private const int reservationInterval = 30;
 
@@ -41,8 +41,9 @@ namespace TRS.DesktopUI.Forms
 
         public ReserveForm()
         {
-            _reservationRepository = new SqlReservationRepository(ConfigurationManager.ConnectionStrings["TRS_DBConnectionString"].ConnectionString);
-            _tableRepository = new SqlTableRepository(ConfigurationManager.ConnectionStrings["TRS_DBConnectionString"].ConnectionString);
+            var connectionString = ConfigurationManager.ConnectionStrings["TRS_DBConnectionString"].ConnectionString;
+            _reservationRepository = new SqlReservationRepository(connectionString);
+            _tableRepository = new SqlTableRepository(connectionString);
 
             InitializeComponent();
 
@@ -101,7 +102,9 @@ namespace TRS.DesktopUI.Forms
 
             var dateNow = DateTime.Now;
 
-            if (selectedDate.Date == dateNow.Date)
+            if (selectedDate.Date == dateNow.Date &&
+                (dateNow.Hour > openHours) && 
+                (dateNow.Hour < closeHours))
             {
                 var minutes = (dateNow.Minute % reservationInterval > 0) ? reservationInterval : 0;
                 startTime = new TimeSpan(dateNow.AddHours(1).Hour, minutes, 0);
@@ -214,9 +217,7 @@ namespace TRS.DesktopUI.Forms
             var endTime = dtpDate.Value.Date.Add(ParseCbToTime(cbTimeTo));
             return DateTime.Compare(startTime, endTime) < 0;
         }
-
-        #endregion
-
+        
         private TimeSpan ParseCbToTime(ComboBox comboBox)
         {
             var cbSplit = comboBox.Text.Split(':');
@@ -225,6 +226,9 @@ namespace TRS.DesktopUI.Forms
 
             return new TimeSpan(hours, minutes, 0);
         }
+
+        #endregion        
+
 
         #region Methods of components
 
@@ -260,8 +264,6 @@ namespace TRS.DesktopUI.Forms
             dgvTables.Rows.Clear();
         }
 
-        #endregion
-
         private void dgvTables_SelectionChanged(object sender, EventArgs e)
         {
             if (dgvTables.SelectedRows.Count < 1 || dgvTables.SelectedRows[0].Cells[0].Value == null)
@@ -281,5 +283,11 @@ namespace TRS.DesktopUI.Forms
             lblSelectedTable.Text = string.Format("Selected table {0}", table.Id);
             lblCost.Text = string.Format("Cost {0}", cost);
         }
+
+
+        #endregion
+
+
+
     }
 }

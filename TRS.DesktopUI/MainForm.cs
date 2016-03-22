@@ -28,7 +28,7 @@ namespace TRS.DesktopUI
         public MainForm()
         {
             _reservationRepository = new SqlReservationRepository(ConfigurationManager.ConnectionStrings["TRS_DBConnectionString"].ConnectionString);
-
+            
             InitializeComponent();
         }
 
