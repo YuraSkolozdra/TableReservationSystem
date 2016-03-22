@@ -14,7 +14,7 @@ namespace TRS.Repositories.Abstract
         int GetCountOfReservationByDate(DateTime reservationDate);
         int GetTotalGuestsOnDate(DateTime reservationDate);
         int ReserveTable(Reservation reservation);
-        bool CancelReservationById(Reservation reservation, int userId);
+        bool CancelReservationById(int reservationId, int userId);
         decimal GetCostOfReservation(Table table, DateTime dateIn, DateTime dateOut);
     }
 }

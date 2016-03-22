@@ -74,7 +74,7 @@ END;
 GO
 
 
-CREATE PROC sp_GetTablesByDateAndSeats
+ALTER PROC sp_GetTablesByDateAndSeats
 	@dateIn DATETIME,
 	@dateOut DATETIME,
 	@countOfSeats INT
@@ -101,7 +101,8 @@ BEGIN
 	ON tab.LocationId = loc.Id
 	LEFT OUTER JOIN tblReservation res
 	ON res.TableId = tab.Id
-	WHERE (NOT(@dateIn > res.DateOut OR @dateOut < res.DateIn) AND res.[Status] = 1);		
+	WHERE (NOT(@dateIn > res.DateOut OR @dateOut < res.DateIn) AND res.[Status] = 1)
+	ORDER BY tab.Rate, tab.CountOfSeats;		
 END;
 
 GO

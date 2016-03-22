@@ -17,17 +17,13 @@ namespace TRS.DesktopUI.Forms
 {
     public partial class ReserveForm : Form
     {
+        #region Const Fields
 
-        #region Const field
-
-        //add open and close
         private const int openHours = 8;
         private const int closeHours = 23;
-
         private const int reservationInterval = 30;
 
         #endregion
-
 
         #region Private Fields
 
@@ -35,7 +31,6 @@ namespace TRS.DesktopUI.Forms
         private readonly ITableRepository _tableRepository;
 
         #endregion
-
 
         #region Constructors
 
@@ -58,38 +53,6 @@ namespace TRS.DesktopUI.Forms
 
         #endregion
 
-
-
-        private void btnReserve_Click(object sender, EventArgs e)
-        {
-            if (!IsFieldsValid())
-            {
-                return;
-            }
-
-            var dateIn = dtpDate.Value.Date.Add(ParseCbToTime(cbTimeFrom));
-            var dateOut = dtpDate.Value.Date.Add(ParseCbToTime(cbTimeTo));
-
-            var table = _tableRepository.GetTableById((int)dgvTables[0, dgvTables.SelectedRows[0].Index].Value);
-
-            var customer = new Customer() { FirstName = tbFirstName.Text, LastName = tbLastName.Text, Phone = tbPhone.Text };            
-
-            var reservation = new Reservation
-            {
-                Table = table,
-                Customer = customer,
-                DateIn = dateIn,
-                DateOut = dateOut,
-                UserId = 1//CurrentUser.Id
-            };
-
-            reservation.Id = _reservationRepository.ReserveTable(reservation);
-
-            //update UI with new reservation
-            MessageBox.Show("Succed" + reservation.Id.ToString());
-        }
-
-
         #region Initializing methods        
 
         private void InitializeTimeInputs(DateTime selectedDate)
@@ -103,7 +66,7 @@ namespace TRS.DesktopUI.Forms
             var dateNow = DateTime.Now;
 
             if (selectedDate.Date == dateNow.Date &&
-                (dateNow.Hour > openHours) && 
+                (dateNow.Hour > openHours) &&
                 (dateNow.Hour < closeHours))
             {
                 var minutes = (dateNow.Minute % reservationInterval > 0) ? reservationInterval : 0;
@@ -142,30 +105,28 @@ namespace TRS.DesktopUI.Forms
             dgvTables.MultiSelect = false;
         }
 
-        private void UpdateAvailableTables()
+        private void ShowAvailableTables()
         {
             if (!IsTimesValid())
             {
-                MessageBox.Show("Bad start and end reservation's times!", "Error", MessageBoxButtons.OK);
+                MessageBox.Show("Bad From and To reservation's times!", "Error", MessageBoxButtons.OK);
                 return;
             }
             var dateIn = dtpDate.Value.Date.Add(ParseCbToTime(cbTimeFrom));
             var dateOut = dtpDate.Value.Date.Add(ParseCbToTime(cbTimeTo));
             var countOfPeople = Int32.Parse(cbCountOfPeople.Text);
 
-            MessageBox.Show(dateIn.ToString() + dateOut.ToString());
-
             var tables = (List<Table>)_tableRepository.GetAvailableTables(dateIn, dateOut, countOfPeople);
 
             dgvTables.Rows.Clear();
-            for (int i = 0; i < tables.Count; i++)
+            for (var i = 0; i < tables.Count; i++)
             {
                 dgvTables.Rows.Add();
                 dgvTables[0, i].Value = tables[i].Id;
-                dgvTables[1, i].Value = tables[i].Rate;
+                dgvTables[1, i].Value = tables[i].Rate.ToString("C");
                 dgvTables[2, i].Value = tables[i].CountOfSeats;
                 dgvTables[3, i].Value = tables[i].Location.Name;
-            }            
+            }
         }
 
         #endregion
@@ -174,22 +135,22 @@ namespace TRS.DesktopUI.Forms
 
         private bool IsFirstNameValid()
         {
-            return (tbFirstName.Text.Length >= 1);
+            return (tbFirstName.Text.Length >= 2);
         }
 
         private bool IsLastNameValid()
         {
-            return (tbLastName.Text.Length >= 1);
+            return (tbLastName.Text.Length >= 2);
         }
 
         private bool IsPhoneValid()
         {
-            return (tbPhone.Text.Length >= 1);
+            return (tbPhone.Text.Length >= 3);
         }
 
         private bool IsTableSelected()
         {
-            return dgvTables.SelectedRows.Count > 0;            
+            return dgvTables.SelectedRows.Count > 0;
         }
 
         private bool IsFieldsValid()
@@ -217,7 +178,7 @@ namespace TRS.DesktopUI.Forms
             var endTime = dtpDate.Value.Date.Add(ParseCbToTime(cbTimeTo));
             return DateTime.Compare(startTime, endTime) < 0;
         }
-        
+
         private TimeSpan ParseCbToTime(ComboBox comboBox)
         {
             var cbSplit = comboBox.Text.Split(':');
@@ -229,38 +190,63 @@ namespace TRS.DesktopUI.Forms
 
         #endregion        
 
+        #region Methods of form's components
 
-        #region Methods of components
-
-        private void dtpDate_ValueChanged(object sender, EventArgs e)
+        private void btnCheckAvailability_Click(object sender, EventArgs e)
         {
-            InitializeTimeInputs(dtpDate.Value.Date);
-            dgvTables.Rows.Clear();
+            ShowAvailableTables();
+            dgvTables_SelectionChanged(sender, e);
+        }
+
+        private void btnReserve_Click(object sender, EventArgs e)
+        {
+            if (!IsFieldsValid())
+            {
+                return;
+            }
+
+            var dateIn = dtpDate.Value.Date.Add(ParseCbToTime(cbTimeFrom));
+            var dateOut = dtpDate.Value.Date.Add(ParseCbToTime(cbTimeTo));
+
+            var table = _tableRepository.GetTableById((int)dgvTables[0, dgvTables.SelectedRows[0].Index].Value);
+
+            var customer = new Customer() { FirstName = tbFirstName.Text, LastName = tbLastName.Text, Phone = tbPhone.Text };
+
+            var reservation = new Reservation
+            {
+                Table = table,
+                Customer = customer,
+                DateIn = dateIn,
+                DateOut = dateOut,
+                UserId = 1//CurrentUser.Id
+            };
+
+            var confirmResult = MessageBox.Show("Are you sure to reserve this table ??",
+                                     "Confirm reservation!!",
+                                     MessageBoxButtons.YesNo);
+
+            if (confirmResult == DialogResult.Yes)
+            {
+                reservation.Id = _reservationRepository.ReserveTable(reservation);
+                MessageBox.Show(string.Format("Reservation was made, reservation id: {0}", reservation.Id.ToString()));
+                dgvTables.Rows.Clear();
+            }
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
-            this.Close();
+            var confirmResult = MessageBox.Show("Are you sure to cancel reservation ??",
+                                     "Cancel reservation!!",
+                                     MessageBoxButtons.YesNo);
+            if (confirmResult == DialogResult.Yes)
+            {
+                this.Close();
+            }
         }
 
-        private void btnCheckAvailability_Click(object sender, EventArgs e)
+        private void dtpDate_ValueChanged(object sender, EventArgs e)
         {
-            UpdateAvailableTables();
-            dgvTables_SelectionChanged(sender, e);
-        }
-
-        private void cbTimeFrom_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            dgvTables.Rows.Clear();
-        }
-
-        private void cbTimeTo_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            dgvTables.Rows.Clear();
-        }
-
-        private void cbCountOfPeople_SelectedIndexChanged(object sender, EventArgs e)
-        {
+            InitializeTimeInputs(dtpDate.Value.Date);
             dgvTables.Rows.Clear();
         }
 
@@ -284,10 +270,21 @@ namespace TRS.DesktopUI.Forms
             lblCost.Text = string.Format("Cost {0}", cost);
         }
 
+        private void cbTimeFrom_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            dgvTables.Rows.Clear();
+        }
+
+        private void cbTimeTo_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            dgvTables.Rows.Clear();
+        }
+
+        private void cbCountOfPeople_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            dgvTables.Rows.Clear();
+        }
 
         #endregion
-
-
-
     }
 }

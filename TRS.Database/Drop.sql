@@ -32,7 +32,7 @@ GO
 
 IF EXISTS (SELECT name FROM sysobjects WHERE name = 'sp_GetCostOfReservation' AND type = 'P')
 BEGIN
-DROP PROCEDURE sp_GetTablesByDateAndSeats;
+DROP PROCEDURE sp_GetCostOfReservation;
 END;
 
 GO

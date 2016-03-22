@@ -2,9 +2,6 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TRS.Entities;
 using TRS.Repositories.Abstract;
 
@@ -220,7 +217,7 @@ namespace TRS.Repositories.Concrete
             }
         }
 
-        public bool CancelReservationById(Reservation reservation, int userId)
+        public bool CancelReservationById(int reservationId, int userId)
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
@@ -231,7 +228,7 @@ namespace TRS.Repositories.Concrete
                     command.Connection = connection;
                     command.CommandType = System.Data.CommandType.StoredProcedure;
                     command.CommandText = GetReservationsByDateQuery;
-                    command.Parameters.AddWithValue("@reservationId", reservation.Id);
+                    command.Parameters.AddWithValue("@reservationId", reservationId);
                     command.Parameters.AddWithValue("@userId", userId);
 
                     return command.ExecuteNonQuery() == 0 ? true : false;

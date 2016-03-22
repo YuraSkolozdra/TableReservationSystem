@@ -20,8 +20,12 @@ namespace TRS.Repositories.Concrete
 
         private const string PriceQuery = @"SELECT Id, Rate, CountOfSeats FROM tblTable ORDER BY Rate;";
 
-        private const string GetBySeatsQuery = @"SELECT tab.Id, tab.Rate, tab.CountOfSeats, loc.Id, loc.Name FROM tblTable tab JOIN tblLocation loc 
-                                                    ON tab.LocationId = loc.Id WHERE tab.CountOfSeats = @countOfSeats;";
+        private const string GetBySeatsQuery = @"SELECT tab.Id, tab.Rate, tab.CountOfSeats, 
+                                                    loc.Id, loc.Name 
+                                                        FROM tblTable tab 
+                                                        JOIN tblLocation loc 
+                                                        ON tab.LocationId = loc.Id 
+                                                        WHERE tab.CountOfSeats = @countOfSeats;";
 
         private const string GetMaxCountOfSeatsQuery = @"SELECT MAX(CountOfSeats) AS MaxCountOfSeats FROM tblTable;";
 
@@ -69,7 +73,7 @@ namespace TRS.Repositories.Concrete
                             int seats = (int)reader["CountOfSeats"];
                             int locationId = (int)reader["LocationId"];
                             string locationName = (string)reader["LocationName"];
-                                                        
+
                             var table = new Table()
                             {
                                 Id = id,
@@ -85,11 +89,8 @@ namespace TRS.Repositories.Concrete
             }
         }
 
-
         public IEnumerable<Table> SellectAll()
         {
-            string priceQuery = "SELECT Id, Rate, CountOfSeats FROM tblTable ORDER BY Rate;";
-
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
@@ -98,7 +99,7 @@ namespace TRS.Repositories.Concrete
                 {
                     command.Connection = connection;
                     command.CommandType = System.Data.CommandType.Text;
-                    command.CommandText = priceQuery;
+                    command.CommandText = PriceQuery;
 
                     using (SqlDataReader reader = command.ExecuteReader())
                     {
