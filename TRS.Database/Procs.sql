@@ -1,7 +1,7 @@
 USE TRS
 
 GO
-
+--I recommend to set names for stored procedures without underscore(spGetUserByLogin)
 CREATE PROC sp_GetUserByLogin
 	@login VARCHAR(50),
 	@passwordHash VARCHAR(50)
@@ -19,6 +19,7 @@ END;
 
 GO
 
+--I recommend to set names for stored procedures without underscore(spGetReservationsByDate)
 CREATE PROC sp_GetReservationsByDate
 	@reservationDate DATETIME,
 	@reservationStatus int
@@ -53,6 +54,7 @@ END;
 
 GO
 
+--I recommend to set names for stored procedures without underscore(spGetAllReservationsByCustomPhone)
 CREATE PROC sp_GetAllReservationsByCustomerPhone
 	@customerPhone VARCHAR(50)
 AS
@@ -85,6 +87,7 @@ END;
 
 GO
 
+--I recommend to set names for stored procedures without underscore(spGetCostOfReservation)
 CREATE PROCEDURE sp_GetCostOfReservation
 					@tableId INT,
 					@dateIn DATETIME,
@@ -102,6 +105,7 @@ END;
 
 GO
 
+--I recommend to set names for stored procedures without underscore(spReserveTable)
 CREATE PROCEDURE sp_ReserveTable
 	@firstName NVARCHAR(50),
 	@lastName NVARCHAR(50),
@@ -156,7 +160,7 @@ END;
 
 GO
 
-
+--I recommend to set names for stored procedures without underscore(spCancelReservationById)
 CREATE PROC sp_CancelReservationById
 	@reservationId INT,
 	@userId INT
@@ -176,7 +180,7 @@ END;
 
 GO
 
-
+--I recommend to set names for stored procedures without underscore(spGetTablesByDateAndSeats)
 CREATE PROC sp_GetTablesByDateAndSeats
 	@dateIn DATETIME,
 	@dateOut DATETIME,
